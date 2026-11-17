@@ -4,293 +4,229 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101522">
-<title>EQOoption | منصة التداول</title>
-
+<title>EQOoption | تسجيل الدخول</title>
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101522;
+color:white;
+min-height:100vh;
 }
-
-body {
-  font-family: Arial, sans-serif;
-  background: #101522;
-  color: white;
-  min-height: 100vh;
+header{
+height:75px;
+padding:0 7%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #293244;
 }
-
-header {
-  height: 85px;
-  padding: 10px 6%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #293244;
+.logo{
+font-size:27px;
+font-weight:bold;
+color:#24d6a0;
 }
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 26px;
-  font-weight: bold;
-  color: #20d6a0;
+.logo span{color:white}
+.lang{
+background:#202b3d;
+color:white;
+border:1px solid #39465b;
+padding:10px 16px;
+border-radius:8px;
 }
-
-.logo img {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  object-fit: contain;
+main{
+min-height:calc(100vh - 145px);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:35px 15px;
 }
-
-.logo span {
-  color: white;
+.login-card{
+width:100%;
+max-width:440px;
+background:#1a2435;
+border:1px solid #303d52;
+border-radius:17px;
+padding:30px;
+box-shadow:0 15px 50px #0005;
 }
-
-.lang {
-  background: #202b3d;
-  color: white;
-  border: 1px solid #39465b;
-  padding: 11px 16px;
-  border-radius: 8px;
-  cursor: pointer;
+h1{text-align:center;font-size:27px}
+.subtitle{
+text-align:center;
+color:#9eacc0;
+line-height:1.7;
+font-size:14px;
 }
-
-main {
-  min-height: calc(100vh - 145px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px 15px;
+.tabs{
+display:flex;
+gap:10px;
+margin:25px 0;
 }
-
-.card {
-  width: 100%;
-  max-width: 440px;
-  background: #1a2435;
-  border: 1px solid #303d52;
-  border-radius: 17px;
-  padding: 30px;
-  box-shadow: 0 15px 50px #0005;
+.tab{
+flex:1;
+padding:13px;
+border:0;
+border-radius:8px;
+background:#263247;
+color:white;
+cursor:pointer;
 }
-
-h1 {
-  text-align: center;
-  margin-bottom: 12px;
+.tab.active{
+background:#19b987;
+color:#071a18;
+font-weight:bold;
 }
-
-.subtitle {
-  text-align: center;
-  color: #9eacc0;
-  line-height: 1.8;
-  font-size: 14px;
+label{
+display:block;
+margin:16px 0 8px;
+font-size:14px;
 }
-
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin: 25px 0;
+input{
+width:100%;
+padding:14px;
+border:1px solid #3b4960;
+border-radius:8px;
+background:#101927;
+color:white;
+font-size:15px;
+outline:none;
 }
-
-.tab {
-  flex: 1;
-  padding: 13px;
-  border: none;
-  border-radius: 8px;
-  background: #263247;
-  color: white;
-  cursor: pointer;
+input:focus{border-color:#20c999}
+.password{
+display:flex;
+gap:7px;
 }
-
-.tab.active {
-  background: #19b987;
-  color: #071a18;
-  font-weight: bold;
+.password input{flex:1;min-width:0}
+.show{
+background:#29374c;
+color:white;
+border:0;
+border-radius:8px;
+padding:0 12px;
+cursor:pointer;
 }
-
-label {
-  display: block;
-  margin: 16px 0 8px;
-  font-size: 14px;
+.submit{
+width:100%;
+margin-top:24px;
+padding:15px;
+border:0;
+border-radius:9px;
+background:#19bd8d;
+color:#071b17;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
 }
-
-input {
-  width: 100%;
-  padding: 14px;
-  background: #101927;
-  border: 1px solid #3b4960;
-  border-radius: 8px;
-  color: white;
-  font-size: 15px;
+.submit:hover{background:#22d6a0}
+.message{
+display:none;
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+background:#29374c;
+color:#b8f5dd;
+line-height:1.7;
+font-size:13px;
 }
-
-.password {
-  display: flex;
-  gap: 7px;
+.terms{
+color:#93a2b7;
+font-size:12px;
+line-height:1.8;
+text-align:center;
+margin-top:20px;
 }
-
-.password input {
-  flex: 1;
-  min-width: 0;
+footer{
+text-align:center;
+padding:20px;
+color:#8795aa;
+font-size:12px;
 }
-
-.show {
-  background: #29374c;
-  color: white;
-  border: none;
-  padding: 0 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.submit {
-  width: 100%;
-  margin-top: 24px;
-  padding: 15px;
-  background: #19bd8d;
-  color: #071b17;
-  border: none;
-  border-radius: 9px;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.submit:hover {
-  background: #22d6a0;
-}
-
-.message {
-  display: none;
-  margin-top: 15px;
-  padding: 12px;
-  background: #29374c;
-  color: #b8f5dd;
-  border-radius: 8px;
-  line-height: 1.7;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #8795aa;
-  font-size: 12px;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-@media(max-width:480px) {
-  .card {
-    padding: 22px;
-  }
-  header {
-    padding: 10px 4%;
-  }
-  .logo {
-    font-size: 21px;
-  }
-}
+[hidden]{display:none!important}
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">
-    <img src="assets/eqooption-logo.jpg" alt="EQOoption Logo">
-    <div>EQ<span>Ooption</span></div>
-  </div>
-
-  <button class="lang" onclick="toggleLanguage()">
-    العربية / English
-  </button>
+<div class="logo">EQ<span>Ooption</span></div>
+<button class="lang" onclick="toggleLanguage()">
+  العربية / English
+</button>
 </header>
 
 <main>
-<section class="card">
+<section class="login-card">
+  <h1 id="heading">مرحباً بعودتك</h1>
+  <p class="subtitle" id="subtitle">
+   سجل الدخول إلى حسابك في EQOoption
+   <br>Welcome back to EQOoption
+  </p>
 
-<h1 id="heading">مرحباً بعودتك</h1>
-
-<p class="subtitle">
-سجل الدخول إلى حسابك في EQOoption
-<br>
-Welcome back to EQOoption
-</p>
-
-<div class="tabs">
-  <button class="tab active" id="loginTab"
-  onclick="showForm('login')">
+  <div class="tabs">
+   <button class="tab active" id="loginTab"
+    onclick="showForm('login')">
     تسجيل الدخول
-  </button>
-
-  <button class="tab" id="registerTab"
-  onclick="showForm('register')">
+   </button>
+   <button class="tab" id="registerTab"
+    onclick="showForm('register')">
     إنشاء حساب
-  </button>
-</div>
+   </button>
+  </div>
 
-<form id="loginForm" onsubmit="demo(event)">
+  <form id="loginForm" onsubmit="demo(event)">
+   <label for="loginEmail">البريد الإلكتروني / Email</label>
+   <input id="loginEmail" type="email"
+    placeholder="example@email.com" required>
 
-<label>البريد الإلكتروني / Email</label>
-<input type="email" required
-placeholder="example@email.com">
+   <label for="loginPassword">كلمة المرور / Password</label>
+   <div class="password">
+    <input id="loginPassword" type="password"
+     placeholder="كلمة المرور" required minlength="6">
+    <button class="show" type="button"
+     onclick="togglePassword('loginPassword',this)">
+     إظهار
+    </button>
+   </div>
 
-<label>كلمة المرور / Password</label>
+   <button class="submit" type="submit">
+    تسجيل الدخول / Sign In
+   </button>
+  </form>
 
-<div class="password">
-<input id="loginPassword" type="password"
-required minlength="6" placeholder="كلمة المرور">
+  <form id="registerForm" hidden
+   onsubmit="demo(event)">
+   <label for="fullName">الاسم الكامل / Full Name</label>
+   <input id="fullName" type="text"
+    placeholder="اسمك الكامل" required>
 
-<button class="show" type="button"
-onclick="togglePassword('loginPassword',this)">
-إظهار
-</button>
-</div>
+   <label for="registerEmail">البريد الإلكتروني / Email</label>
+   <input id="registerEmail" type="email"
+    placeholder="example@email.com" required>
 
-<button class="submit" type="submit">
-تسجيل الدخول / Sign In
-</button>
+   <label for="registerPassword">كلمة المرور / Password</label>
+   <div class="password">
+    <input id="registerPassword" type="password"
+      placeholder="6 أحرف على الأقل" required minlength="6">
+    <button class="show" type="button"
+     onclick="togglePassword('registerPassword',this)">
+     إظهار
+    </button>
+   </div>
 
-</form>
+   <button class="submit" type="submit">
+    إنشاء حساب / Create Account
+   </button>
+  </form>
 
-<form id="registerForm" hidden
-onsubmit="demo(event)">
+  <div class="message" id="message"></div>
 
-<label>الاسم الكامل / Full Name</label>
-<input type="text" required placeholder="اسمك الكامل">
-<label>البريد الإلكتروني / Email</label>
-<input type="email" required placeholder="example@email.com">
-
-<label>كلمة المرور / Password</label>
-
-<div class="password">
-<input id="registerPassword" type="password"
-required minlength="6" placeholder="كلمة المرور">
-
-<button class="show" type="button"
-onclick="togglePassword('registerPassword',this)">
-إظهار
-</button>
-</div>
-
-<button class="submit" type="submit">
-إنشاء حساب / Create Account
-</button>
-
-</form>
-
-<div class="message" id="message"></div>
-
-<p class="subtitle" style="margin-top:22px">
-EQOoption – منصة تجريبية
-<br>
-Terms & Privacy Policy
-</p>
-
+  <p class="terms">
+   بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.
+   <br>
+   By continuing, you agree to our Terms and Privacy Policy.
+   <br><br>
+   EQOoption – تجربة تعليمية تجريبية
+  </p>
 </section>
 </main>
 
@@ -299,65 +235,48 @@ EQOoption © 2026 | جميع الحقوق محفوظة
 </footer>
 
 <script>
-let english = false;
+let english=false;
 
-function showForm(type) {
-  const login = type === 'login';
-
-  document.getElementById('loginForm').hidden = !login;
-  document.getElementById('registerForm').hidden = login;
-
-  document.getElementById('loginTab')
-    .classList.toggle('active', login);
-
-  document.getElementById('registerTab')
-    .classList.toggle('active', !login);
-
-  document.getElementById('heading').textContent =
-    login
-    ? (english ? 'Welcome Back' : 'مرحباً بعودتك')
-    : (english ? 'Create Account' : 'إنشاء حساب جديد');
-
-  document.getElementById('message').style.display = 'none';
+function showForm(type){
+const login=type==='login';
+document.getElementById('loginForm').hidden=!login;
+document.getElementById('registerForm').hidden=login;
+document.getElementById('loginTab').classList.toggle('active',login);
+document.getElementById('registerTab').classList.toggle('active',!login);
+document.getElementById('heading').textContent=
+login?(english?'Welcome Back':'مرحباً بعودتك'):
+(english?'Create Account':'إنشاء حساب جديد');
+document.getElementById('message').style.display='none';
 }
 
-function togglePassword(id, button) {
-  const field = document.getElementById(id);
-  const visible = field.type === 'password';
-
-  field.type = visible ? 'text' : 'password';
-  button.textContent = visible
-    ? (english ? 'Hide' : 'إخفاء')
-    : (english ? 'Show' : 'إظهار');
+function togglePassword(id,button){
+const field=document.getElementById(id);
+const visible=field.type==='password';
+field.type=visible?'text':'password';
+button.textContent=visible?'إخفاء':'إظهار';
 }
 
-function toggleLanguage() {
-  english = !english;
-
-  document.documentElement.lang = english ? 'en' : 'ar';
-  document.documentElement.dir = english ? 'ltr' : 'rtl';
-
-  document.querySelector('.lang').textContent =
-    english ? 'Arabic / English' : 'العربية / English';
-
-  document.getElementById('loginTab').textContent =
-    english ? 'Sign In' : 'تسجيل الدخول';
-
-  document.getElementById('registerTab').textContent =
-    english ? 'Register' : 'إنشاء حساب';
-
-  showForm('login');
+function toggleLanguage(){
+english=!english;
+document.documentElement.lang=english?'en':'ar';
+document.documentElement.dir=english?'ltr':'rtl';
+document.querySelector('.lang').textContent=
+english?'Arabic / English':'العربية / English';
+document.getElementById('loginTab').textContent=
+english?'Sign In':'تسجيل الدخول';
+document.getElementById('registerTab').textContent=
+english?'Register':'إنشاء حساب';
+showForm('login');
 }
 
-function demo(event) {
-  event.preventDefault();
-
-  const message = document.getElementById('message');
-  message.style.display = 'block';
-
-  message.textContent = english
-    ? 'Demo only. No account was created.'
-    : 'هذه واجهة حقيقه . لم يتم إنشاء حساب حقيقي.';
+function demo(event){
+event.preventDefault();
+const message=document.getElementById('message');
+message.style.display='block';
+message.textContent=
+english?
+'Demo interface only. No account was created and no data was sent.':
+'هذه واجهة تجريبية فقط. لم يتم إنشاء حساب ولم تُرسل أي بيانات.';
 }
 </script>
 
