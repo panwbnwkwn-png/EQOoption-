@@ -1,62 +1,8 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#111318"><meta name="description" content="EQOOption — واجهة تداول تجريبية">
-  <title>EQOOption</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="app-shell">
-  <header class="topbar"><button class="brand" data-page="trade" aria-label="EQOOption"><span class="brand-mark">X</span><span>EQO<span>Option</span></span></button><div class="top-actions"><span class="balance"><small data-i18n="real">حساب حقيقي</small><b>$0.90</b></span><button class="btn green" data-page="deposit" data-i18n="deposit">إيداع</button><select id="language" aria-label="Language"><option value="ar">العربية</option><option value="en">English</option></select></div></header>
-  <main>
-    <section id="auth" class="auth-wrap page active">
-      <div class="auth-brand"><span class="brand-mark large">X</span><div><b>EQOOption</b><small id="auth-kicker">SECURE ACCESS</small></div></div>
-      <h1 id="auth-title">تسجيل الدخول إلى حسابك</h1>
-      <div class="notice"><b>EQOOption · دخول آمن</b><p>سجّل الدخول فقط عبر نطاق المنصة الموثوق به.</p></div>
-      <div class="auth-card">
-        <div class="auth-tabs"><button id="tab-signup" data-auth="signup">التسجيل</button><button id="tab-login" class="selected" data-auth="login">تسجيل الدخول</button></div>
-        <form id="login-form" class="auth-form">
-          <label>البريد الإلكتروني<input type="email" placeholder="name@example.com" required></label>
-          <label>كلمة المرور<input type="password" placeholder="••••••••" required minlength="6"></label>
-          <div class="form-between"><label class="check"><input type="checkbox" checked> تذكرني</label><button type="button" class="text-link" data-auth="forgot">هل نسيت كلمة المرور؟</button></div>
-          <button class="btn blue full" type="submit">➜ تسجيل الدخول</button>
-        </form>
-        <form id="signup-form" class="auth-form hidden">
-          <label>بلد / منطقة الإقامة<select required><option value="">Select country</option><option>Yemen</option><option>Saudi Arabia</option><option>Egypt</option><option>United Arab Emirates</option></select></label>
-          <div class="two-fields"><label>مفتاح الدولة<select><option>+967</option><option>+966</option><option>+20</option><option>+971</option></select></label><label>رقم الهاتف<input type="tel" placeholder="رقم الهاتف"></label></div>
-          <label>البريد الإلكتروني<input type="email" placeholder="name@example.com" required></label>
-          <label>رمز الإحالة (اختياري)<input type="text" placeholder="Enter referral code" value=""></label>
-          <label>كلمة المرور<input type="password" placeholder="••••••••" minlength="8" required></label>
-          <label class="check"><input type="checkbox" required> أؤكد أن عمري 18 عاماً أو أكثر وأوافق على <a href="#terms">شروط المنصة</a></label>
-          <label class="check"><input type="checkbox" required> أقر وأؤكد أنني لست مواطناً أو مقيماً في الولايات المتحدة لأغراض ضريبية</label>
-          <button class="btn blue full" type="submit">➜ التسجيل</button>
-        </form>
-        <form id="forgot-form" class="auth-form hidden"><h2>هل نسيت كلمة المرور؟</h2><p class="muted">We will send a reset link if this email belongs to an active account.</p><label>عنوان البريد الإلكتروني<input type="email" placeholder="you@example.com" required></label><button class="btn blue full" type="submit">Send reset link</button><button class="text-link centered" type="button" data-auth="login">Back to sign in</button><div class="privacy-note">لخصوصيتك، ستظهر رسالة التأكيد نفسها سواء كان البريد مرتبطاً بحساب أم لا.</div></form>
-      </div>
-      <div class="auth-footer"><span>EQOOption</span> · تداول تجريبي آمن</div>
-    </section>
 
-    <section id="trade" class="page">
-      <div class="market-head"><div class="asset"><span>🇪🇺 🇺🇸</span><b>EUR/USD</b><small class="green-text">87%</small></div><div class="market-price"><small>السعر الحالي</small><b id="price">1.08690</b></div></div>
-      <div class="chart-card tradingview-card"><div class="chart-meta"><span class="live-dot"></span><b>TradingView</b><span class="muted">OANDA:EURUSD · بيانات سوق الفوركس</span><span class="chart-info" title="مخطط مدمج من TradingView">i</span></div><div class="tradingview-frame"><div id="tradingview_chart" aria-label="مخطط TradingView التفاعلي"></div></div><div class="chart-disclaimer">الرسم والبيانات من TradingView / OANDA. لا تمثل هذه البيانات أسعار OTC الخاصة بالمنصة.</div></div>
-      <div class="trade-panel"><div class="trade-top"><span>صفقة معلقة　⌄</span><b>EUR/USD</b><strong>87%</strong></div><div class="trade-inputs"><label>الاستثمار<div class="amount-control"><button type="button" data-amount="-1">−</button><input id="amount" type="number" min="1" value="1"><button type="button" data-amount="1">＋</button></div></label><label>الوقت<input value="13:10" readonly></label></div><div class="payout">العائد المتوقع <b id="payout">$1.87</b></div><div class="trade-buttons"><button class="btn red" data-trade="هبوط">↓ هبوط</button><button class="btn green" data-trade="صعود">↑ صعود</button></div><p class="demo-note">وضع تجريبي — لا يتم تنفيذ أوامر مالية حقيقية.</p></div>
-      <div class="section-heading"><h2>الصفقات الأخيرة</h2><span class="pill">0</span></div><div class="empty-state">لا توجد صفقات نشطة حالياً</div>
-    </section>
 
-    <section id="profile" class="page"><div class="section-heading"><div><small class="eyebrow">الملف الشخصي</small><h1>حسابي</h1></div></div><div class="panel profile-panel"><div class="panel-title"><span class="user-icon">♙</span><div><small class="eyebrow">البيانات الشخصية</small><h2>إعدادات الملف الشخصي</h2></div></div><div class="profile-summary"><div class="avatar">0</div><div><b>demo@eqooption.com</b><small>ID: #660001</small><span class="green-text">✓ موثق تجريبياً</span></div></div><label>الاسم الكامل<input value="Osama Ahmed Ali"></label><label>الاسم المستعار<input value="Al-Kholani"></label><label>عنوان البريد الإلكتروني<input value="demo@eqooption.com" disabled></label><label>رقم الهاتف<input placeholder="أدخل رقم الهاتف"></label><button class="btn blue full" id="save-profile">حفظ التغييرات</button><button class="text-link centered" type="button" id="logout">تسجيل الخروج</button></div></section>
 
-    <section id="deposit" class="page"><div class="section-heading"><div><small class="eyebrow">NEW REQUEST</small><h1>إيداع</h1></div><span class="tag">DEPOSIT ONLY</span></div><div class="panel"><h3>1 · طريقة الدفع</h3><label>منطقة الدفع<select><option>Yemen</option></select></label><div class="method-tabs"><button class="selected" data-method="Binance Pay">POPULAR</button><button data-method="USDT (TRC-20)">USDT</button><button data-method="E-PAY">E-PAY</button></div><div class="payment-choice" id="chosen-method">✓　 Binance Pay <small>Min $10.00</small></div><hr><h3>2 · المبلغ والوجهة</h3><label>Amount (USD)<input id="deposit-amount" type="number" value="100" min="10"></label><div class="quick-amounts"><button data-percent="25">25%</button><button data-percent="50">50%</button><button data-percent="75">75%</button><button data-percent="100">Max</button></div><div class="privacy-note">تحقق من الوجهة بعناية. هذه واجهة تجريبية ولا تستقبل أي مدفوعات.</div><label>اسم صاحب الحساب (اختياري)<input placeholder="Name on payment account"></label><label>Binance Pay destination / wallet address<input placeholder="Wallet address"></label><label>ملاحظة (اختياري)<textarea rows="3" placeholder="أضف أي تفاصيل"></textarea></label><button class="btn green full" id="pay-demo">PAY · تجربة فقط</button><div class="empty-state">لا توجد طلبات إيداع حتى الآن</div></div></section>
 
-    <section id="support" class="page"><div class="section-heading"><div><small class="eyebrow">HELP CENTER</small><h1>Customer support</h1></div></div><div class="support-email">eqooption.support@example.com</div><div class="panel"><div class="panel-title"><span>♧</span><div><small class="eyebrow">NEW REQUEST</small><h2>الاتصال بالدعم</h2></div></div><form id="support-form"><label>Category<select><option>الحساب</option><option>الإيداع</option><option>السحب</option><option>التداول</option><option>مشكلة تقنية</option></select></label><label>Related order (optional)<select><option>No order selected</option></select></label><label>الموضوع<input required></label><label>الرسالة<textarea rows="5" required></textarea></label><button class="btn blue full">إرسال الطلب</button></form></div></section>
 
-    <section id="history" class="page"><div class="section-heading"><div><small class="eyebrow">ACTIVITY</small><h1>السجل</h1></div></div><div class="panel empty-state">لا توجد معاملات في السجل حتى الآن</div></section>
-    <section id="more" class="page"><div class="section-heading"><h1>المزيد</h1></div><div class="panel menu-list"><button>الأسئلة الشائعة　›</button><button>أسئلة عامة　›</button><button>أسئلة الدفع　›</button><button data-page="support">مساعدة الحساب　›</button><button>من نحن　›</button><button>جهات الاتصال　›</button><button>شركاء المنصة　↗</button><button id="open-login">تسجيل الدخول　↗</button></div><div class="risk"><b>EQOOption · أمان الحساب</b><p>تحذير المخاطر: ينطوي التداول في الأدوات المالية والخيارات الرقمية على مستوى عالٍ من المخاطر وقد يؤدي إلى خسارة رأس المال بالكامل. هذه النسخة واجهة تجريبية لأغراض التطوير فقط.</p></div></section>
-  </main>
-  <nav class="bottom-nav"><button class="active" data-page="trade"><span>▧</span><small>تداول</small></button><button data-page="history"><span>◷</span><small>السجل</small></button><button data-page="deposit"><span>▣</span><small>إيداع</small></button><button data-page="support"><span>♧</span><small>الدعم</small></button><button data-page="profile"><span>♙</span><small>حسابي</small></button><button data-page="more"><span>•••</span><small>المزيد</small></button></nav>
-  <div id="toast" class="toast" role="status"></div>
-</div><script src="app.js"></script>
-</body></html>
 <script>
 SUPABASE_URL = "https://smawnzohdenmpzhlubehg.supabase.co";
 SUPABASE_PUBLISHABLE_KEY = "sb_publishable_qgsTR-ERRR1v-mm2rgqmqQ_YFP39z0l";
