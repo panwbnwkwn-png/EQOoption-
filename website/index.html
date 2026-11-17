@@ -1,1 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101522">
+<title>EQOoption | تسجيل الدخول</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101522;
+color:white;
+min-height:100vh;
+}
+header{
+height:75px;
+padding:0 7%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid #293244;
+}
+.logo{
+font-size:27px;
+font-weight:bold;
+color:#24d6a0;
+}
+.logo span{color:white}
+.lang{
+background:#202b3d;
+color:white;
+border:1px solid #39465b;
+padding:10px 16px;
+border-radius:8px;
+}
+main{
+min-height:calc(100vh - 145px);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:35px 15px;
+}
+.login-card{
+width:100%;
+max-width:440px;
+background:#1a2435;
+border:1px solid #303d52;
+border-radius:17px;
+padding:30px;
+box-shadow:0 15px 50px #0005;
+}
+h1{text-align:center;font-size:27px}
+.subtitle{
+text-align:center;
+color:#9eacc0;
+line-height:1.7;
+font-size:14px;
+}
+.tabs{
+display:flex;
+gap:10px;
+margin:25px 0;
+}
+.tab{
+flex:1;
+padding:13px;
+border:0;
+border-radius:8px;
+background:#263247;
+color:white;
+cursor:pointer;
+}
+.tab.active{
+background:#19b987;
+color:#071a18;
+font-weight:bold;
+}
+label{
+display:block;
+margin:16px 0 8px;
+font-size:14px;
+}
+input{
+width:100%;
+padding:14px;
+border:1px solid #3b4960;
+border-radius:8px;
+background:#101927;
+color:white;
+font-size:15px;
+outline:none;
+}
+input:focus{border-color:#20c999}
+.password{
+display:flex;
+gap:7px;
+}
+.password input{flex:1;min-width:0}
+.show{
+background:#29374c;
+color:white;
+border:0;
+border-radius:8px;
+padding:0 12px;
+cursor:pointer;
+}
+.submit{
+width:100%;
+margin-top:24px;
+padding:15px;
+border:0;
+border-radius:9px;
+background:#19bd8d;
+color:#071b17;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+}
+.submit:hover{background:#22d6a0}
+.message{
+display:none;
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+background:#29374c;
+color:#b8f5dd;
+line-height:1.7;
+font-size:13px;
+}
+.terms{
+color:#93a2b7;
+font-size:12px;
+line-height:1.8;
+text-align:center;
+margin-top:20px;
+}
+footer{
+text-align:center;
+padding:20px;
+color:#8795aa;
+font-size:12px;
+}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
 
+<header>
+<div class="logo">EQ<span>Ooption</span></div>
+<button class="lang" onclick="toggleLanguage()">
+  العربية / English
+</button>
+</header>
+
+<main>
+<section class="login-card">
+  <h1 id="heading">مرحباً بعودتك</h1>
+  <p class="subtitle" id="subtitle">
+   سجل الدخول إلى حسابك في EQOoption
+   <br>Welcome back to EQOoption
+  </p>
+
+  <div class="tabs">
+   <button class="tab active" id="loginTab"
+    onclick="showForm('login')">
+    تسجيل الدخول
+   </button>
+   <button class="tab" id="registerTab"
+    onclick="showForm('register')">
+    إنشاء حساب
+   </button>
+  </div>
+
+  <form id="loginForm" onsubmit="demo(event)">
+   <label for="loginEmail">البريد الإلكتروني / Email</label>
+   <input id="loginEmail" type="email"
+    placeholder="example@email.com" required>
+
+   <label for="loginPassword">كلمة المرور / Password</label>
+   <div class="password">
+    <input id="loginPassword" type="password"
+     placeholder="كلمة المرور" required minlength="6">
+    <button class="show" type="button"
+     onclick="togglePassword('loginPassword',this)">
+     إظهار
+    </button>
+   </div>
+
+   <button class="submit" type="submit">
+    تسجيل الدخول / Sign In
+   </button>
+  </form>
+
+  <form id="registerForm" hidden
+   onsubmit="demo(event)">
+   <label for="fullName">الاسم الكامل / Full Name</label>
+   <input id="fullName" type="text"
+    placeholder="اسمك الكامل" required>
+
+   <label for="registerEmail">البريد الإلكتروني / Email</label>
+   <input id="registerEmail" type="email"
+    placeholder="example@email.com" required>
+
+   <label for="registerPassword">كلمة المرور / Password</label>
+   <div class="password">
+    <input id="registerPassword" type="password"placeholder="6 أحرف على الأقل" required minlength="6">
+    <button class="show" type="button"
+     onclick="togglePassword('registerPassword',this)">
+     إظهار
+    </button>
+   </div>
+
+   <button class="submit" type="submit">
+    إنشاء حساب / Create Account
+   </button>
+  </form>
+
+  <div class="message" id="message"></div>
+
+  <p class="terms">
+   بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.
+   <br>
+   By continuing, you agree to our Terms and Privacy Policy.
+   <br><br>
+   EQOoption – تجربة تعليمية تجريبية
+  </p>
+</section>
+</main>
+
+<footer>
+EQOoption © 2026 | جميع الحقوق محفوظة
+</footer>
+
+<script>
+let english=false;
+
+function showForm(type){
+const login=type==='login';
+document.getElementById('loginForm').hidden=!login;
+document.getElementById('registerForm').hidden=login;
+document.getElementById('loginTab').classList.toggle('active',login);
+document.getElementById('registerTab').classList.toggle('active',!login);
+document.getElementById('heading').textContent=
+login?(english?'Welcome Back':'مرحباً بعودتك'):
+(english?'Create Account':'إنشاء حساب جديد');
+document.getElementById('message').style.display='none';
+}
+
+function togglePassword(id,button){
+const field=document.getElementById(id);
+const visible=field.type==='password';
+field.type=visible?'text':'password';
+button.textContent=visible?'إخفاء':'إظهار';
+}
+
+function toggleLanguage(){
+english=!english;
+document.documentElement.lang=english?'en':'ar';
+document.documentElement.dir=english?'ltr':'rtl';
+document.querySelector('.lang').textContent=
+english?'Arabic / English':'العربية / English';
+document.getElementById('loginTab').textContent=
+english?'Sign In':'تسجيل الدخول';
+document.getElementById('registerTab').textContent=
+english?'Register':'إنشاء حساب';
+showForm('login');
+}
+
+function demo(event){
+event.preventDefault();
+const message=document.getElementById('message');
+message.style.display='block';
+message.textContent=
+english?
+'Demo interface only. No account was created and no data was sent.':
+'هذه واجهة تجريبية فقط. لم يتم إنشاء حساب ولم تُرسل أي بيانات.';
+}
+</script>
+
+</body>
+</html>
