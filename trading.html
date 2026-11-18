@@ -1,1 +1,212 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQOOption - منصة التداول</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1220;color:#fff;font-family:Arial,sans-serif}
+header{background:#111c2e;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid #26364f}
+.logo{font-size:23px;font-weight:bold;color:#fff}
+.logo span{color:#00c99a}
+.wallet{background:#1b2a40;padding:10px 18px;border-radius:10px;text-align:center}
+.wallet small{display:block;color:#aebbd0;margin-bottom:5px}
+.wallet strong{font-size:20px;color:#00d6a0;direction:ltr;display:block}
+.modes{display:flex;gap:8px}
+button{border:0;border-radius:8px;padding:11px 17px;font-weight:bold;cursor:pointer}
+.mode{background:#26364f;color:white}
+.mode.active{background:#00b894;color:white}
+main{max-width:1200px;margin:auto;padding:18px}
+.topbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+select,input{background:#17263c;color:white;border:1px solid #344761;border-radius:7px;padding:10px}
+.panel{background:#111c2e;border:1px solid #26364f;border-radius:12px;padding:16px;margin-bottom:15px}
+.chart-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.chart{height:360px;margin-top:15px;background:#0b1525;border-radius:9px;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+.trade-layout{display:grid;grid-template-columns:1fr 280px;gap:15px}
+.trade-controls label{display:block;color:#aebbd0;margin:12px 0 6px}
+.trade-controls input,.trade-controls select{width:100%}
+.trade-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.up{background:#00b987;color:#fff}
+.down{background:#ed5266;color:#fff}
+.notice{color:#aebbd0;font-size:13px;line-height:1.7}
+.status{color:#00d6a0;font-size:13px}
+#history{padding:0;list-style:none}
+#history li{padding:10px;border-bottom:1px solid #26364f;color:#dce5f2}
+@media(max-width:750px){.trade-layout{grid-template-columns:1fr}.chart{height:280px}header{align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EQ<span>O</span>Option</div>
+  <div class="wallet">
+    <small>محفظة</small>
+    <strong id="balance">$10,000.00</strong>
+  </div>
+  <div class="modes">
+    <button class="mode active" id="demoBtn" onclick="switchMode('demo')">تجريبي</button>
+    <button class="mode" id="realBtn" onclick="switchMode('real')">حقيقي</button>
+  </div>
+</header>
+
+<main>
+  <div class="topbar">
+    <select id="asset">
+      <option>EUR/USD</option>
+      <option>GBP/USD</option>
+      <option>USD/JPY</option>
+      <option>BTC/USD</option>
+    </select>
+    <select id="timeframe">
+      <option value="1">1 دقيقة</option>
+      <option value="5">5 دقائق</option>
+      <option value="15">15 دقيقة</option>
+    </select>
+    <span class="status" id="modeStatus">أنت الآن في الحساب التجريبي</span>
+  </div>
+
+  <div class="panel">
+    <div class="chart-head">
+      <strong>مخطط الأسعار</strong>
+      <span class="notice">رسم توضيحي تجريبي - ليس بيانات سوق مباشرة</span>
+    </div>
+    <div class="chart">
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+  <div class="trade-layout">
+    <section class="panel trade-controls">
+      <h3>تنفيذ صفقة تجريبية</h3>
+      <label>مبلغ الصفقة ($)</label>
+      <input id="amount" type="number" min="1" value="100">
+      <label>مدة الصفقة</label>
+      <select id="duration">
+        <option value="60">60 ثانية</option>
+        <option value="120">دقيقتان</option>
+        <option value="300">5 دقائق</option>
+      </select>
+      <label>العائد الافتراضي</label>
+      <input value="85%" disabled>
+      <div class="trade-buttons">
+        <button class="up" onclick="placeTrade('up')">صعود ▲</button>
+        <button class="down" onclick="placeTrade('down')">هبوط ▼</button>
+      </div>
+      <p class="notice" id="message">التداول التجريبي يستخدم رصيداً افتراضياً فقط.</p>
+    </section>
+
+    <section class="panel">
+      <h3>سجل الصفقات</h3>
+      <ul id="history">
+        <li>لا توجد صفقات حتى الآن</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<script>
+let demoBalance = 10000;
+let currentMode = 'demo';
+
+function updateBalance(){
+  document.getElementById('balance').textContent =
+    '$' + demoBalance.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function switchMode(mode){
+  if(mode === 'real'){
+    document.getElementById('message').textContent =
+      'التداول الحقيقي غير مفعّل حالياً. يلزم ربط وسيط مرخّص ومحفظة آمنة أولاً.';
+    document.getElementById('modeStatus').textContent = 'الوضع الحقيقي - غير مفعّل';
+    document.getElementById('demoBtn').classList.remove('active');
+    document.getElementById('realBtn').classList.add('active');
+    currentMode = 'real';
+    return;
+  }
+
+  currentMode = 'demo';
+  document.getElementById('demoBtn').classList.add('active');
+  document.getElementById('realBtn').classList.remove('active');
+  document.getElementById('modeStatus').textContent = 'أنت الآن في الحساب التجريبي';
+  document.getElementById('message').textContent =
+    'التداول التجريبي يستخدم رصيداً افتراضياً فقط.';
+  updateBalance();
+}
+
+function placeTrade(direction){
+  if(currentMode !== 'demo'){
+    document.getElementById('message').textContent =
+      'الصفقات الحقيقية غير متاحة حالياً.';
+    return;
+  }
+
+  const amount = Number(document.getElementById('amount').value);
+  if(!Number.isFinite(amount) || amount <= 0 || amount > demoBalance){
+    document.getElementById('message').textContent =
+      'تحقق من مبلغ الصفقة والرصيد المتاح.';
+    return;
+  }
+
+  demoBalance -= amount;
+  updateBalance();
+
+  const history = document.getElementById('history');
+  if(history.textContent.includes('لا توجد صفقات')) history.innerHTML = '';
+
+  const item = document.createElement('li');
+  item.textContent =
+    (direction === 'up' ? 'صعود ▲' : 'هبوط ▼') +
+    ' — $' + amount.toFixed(2) + ' — تجريبية';
+  history.prepend(item);
+
+  document.getElementById('message').textContent =
+    'تم تسجيل صفقة تجريبية. لم يتم تنفيذ صفقة في السوق.';
+}
+
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+
+function drawChart(){
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = rect.width * ratio;
+  canvas.height = rect.height * ratio;
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+
+  const w = rect.width, h = rect.height;
+  ctx.clearRect(0,0,w,h);
+
+  ctx.strokeStyle = '#26364f';
+  ctx.lineWidth = 1;
+  for(let y=35;y<h;y+=45){
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+  }
+
+  let price = h * 0.55;
+  for(let i=0;i<45;i++){
+    const x = 12 + i*(w-25)/45;
+    const change = (Math.random()-.49)*35;
+    const open = price;
+    const close = Math.max(25,Math.min(h-20,price+change));
+    const high = Math.min(open,close)-Math.random()*12;
+    const low = Math.max(open,close)+Math.random()*12;
+    const color = close < open ? '#ed5266' : '#00c99a';
+
+    ctx.strokeStyle=color;
+    ctx.fillStyle=color;
+    ctx.beginPath();ctx.moveTo(x+4,high);ctx.lineTo(x+4,low);ctx.stroke();
+    ctx.fillRect(x,Math.min(open,close),8,Math.max(3,Math.abs(close-open)));
+    price=close;
+  }
+}
+
+drawChart();
+window.addEventListener('resize',drawChart);
+updateBalance();
+</script>
+</body>
+</html>
+
