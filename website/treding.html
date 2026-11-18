@@ -1,1 +1,582 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EQOOption - لوحة التداول</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#101116;--panel:#191b23;--panel2:#222530;
+  --line:#303441;--text:#f5f6fa;--muted:#9299aa;
+  --blue:#1677ff;--green:#12bd83;--red:#f05261;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,Tahoma,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
+.topbar{
+  height:66px;padding:0 22px;background:#171920;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;position:sticky;top:0;z-index:5
+}
+.logo{font-size:23px;font-weight:bold;color:#fff}
+.logo span{color:var(--blue)}
+.top-actions{display:flex;align-items:center;gap:12px}
+.balance{
+  background:#242936;border:1px solid #394253;
+  border-radius:9px;padding:10px 14px;font-size:14px
+}
+.balance strong{color:var(--green);margin-right:5px}
+.logout{
+  background:#303541;color:white;border-radius:8px;
+  padding:10px 14px
+}
+.layout{
+  display:grid;grid-template-columns:minmax(0,1fr) 310px;
+  gap:15px;padding:16px;max-width:1600px;margin:auto
+}
+.main{min-width:0}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:15px;margin-bottom:14px
+}
+.asset-head{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;flex-wrap:wrap
+}
+.asset-name{font-size:19px;font-weight:bold}
+.price{font-size:23px;font-weight:bold;margin-top:8px}
+.change{font-size:13px;color:var(--green);margin-top:5px}
+.assets{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.asset{
+  background:var(--panel2);color:#dce1ec;
+  border:1px solid var(--line);border-radius:8px;
+  padding:9px 12px
+}
+.asset.active{border-color:var(--blue);background:#142b4b}
+.chart-tools{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px
+}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tool{
+  background:var(--panel2);color:#dce1ec;
+  border:1px solid var(--line);border-radius:7px;
+  padding:8px 11px
+}
+.tool.active{background:var(--blue);color:white}
+.chart-wrap{
+  height:390px;position:relative;background:#11151d;
+  border:1px solid #282e3b;border-radius:9px;overflow:hidden
+}
+canvas{width:100%;height:100%;display:block}
+.chart-note{font-size:11px;color:var(--muted);margin-top:9px}
+.side-title{font-weight:bold;font-size:17px;margin-bottom:15px}
+.field{margin-bottom:15px}
+.field label{display:block;color:#b7bdca;font-size:13px;margin-bottom:8px}
+.field input,.field select{
+  width:100%;background:#11141c;color:white;
+  border:1px solid #363c49;border-radius:8px;
+  padding:12px;outline:none
+}
+.trade-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.trade-btn{
+  color:white;padding:14px 8px;border-radius:9px;
+  font-weight:bold;font-size:16px
+}
+.up{background:#0da978}.down{background:#dc4052}
+.trade-btn:disabled{opacity:.45;cursor:not-allowed}
+.info{
+  background:#222936;border-radius:8px;padding:12px;
+  color:#c2c9d7;font-size:13px;line-height:1.8;margin-top:14px
+}
+.history{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:450px}
+th,td{text-align:right;padding:12px 9px;
+border-bottom:1px solid var(--line);font-size:13px}
+th{color:var(--muted);font-weight:normal}
+.win{color:var(--green)}.loss{color:var(--red)}
+.empty{text-align:center;color:var(--muted);padding:22px}
+.status{font-size:12px;color:var(--muted);margin-top:8px}
+.notice{
+  padding:11px 13px;background:#202a3a;border:1px solid #344966;
+  color:#cbd9ef;border-radius:9px;font-size:12px;line-height:1.7;
+  margin-bottom:14px
+}
+#message{
+  display:none;padding:12px;border-radius:8px;
+  margin-bottom:12px;font-size:13px
+}
+#message.error{display:block;background:#49232a;color:#ffdce0}
+#message.ok{display:block;background:#173d32;color:#c8ffeb}
+@media(max-width:850px){
+  .layout{grid-template-columns:1fr;padding:10px}
+  .chart-wrap{height:330px}
+  .topbar{padding:0 10px}
+  .logo{font-size:19px}
+  .balance{padding:8px;font-size:12px}
+  .logout{padding:8px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">EQO<span>Option</span></div>
+  <div class="top-actions">
+    <div class="balance">الرصيد التجريبي:
+      <strong id="balance">$10,000.00</strong>
+    </div>
+    <button class="logout" id="logoutBtn">تسجيل الخروج</button>
+  </div>
+</header>
+
+<div class="layout">
+  <main class="main">
+    <div id="message"></div>
+
+    <div class="notice">
+      أنت تستخدم حساب التداول التجريبي. الأسعار والصفقات في هذه الصفحة
+      محاكاة تعليمية وليست أسعاراً حقيقية أو أوامر تداول لدى وسيط.
+    </div>
+
+    <section class="panel">
+      <div class="asset-head">
+        <div>
+          <div class="asset-name" id="assetName">EUR/USD</div>
+          <div class="price" id="price">1.08450</div>
+          <div class="change" id="priceChange">+0.00%</div>
+        </div>
+        <div class="status">السوق التجريبي · متصل بالمحاكاة</div>
+      </div>
+
+      <div class="assets" id="assets">
+        <button class="asset active" data-name="EUR/USD" data-price="1.08450">EUR/USD</button>
+        <button class="asset" data-name="GBP/USD" data-price="1.27120">GBP/USD</button>
+        <button class="asset" data-name="USD/JPY" data-price="150.250">USD/JPY</button>
+        <button class="asset" data-name="GOLD" data-price="2650.00">GOLD</button>
+        <button class="asset" data-name="BTC/USD" data-price="68000">BTC/USD</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="chart-tools">
+        <strong>الرسم البياني</strong>
+        <div class="tools" id="timeframes">
+          <button class="tool active" data-time="1">1 دقيقة</button>
+          <button class="tool" data-time="5">5 دقائق</button>
+          <button class="tool" data-time="15">15 دقيقة</button>
+          <button class="tool" data-time="30">30 دقيقة</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+      <div class="chart-note">
+        رسم توضيحي مولّد داخل المتصفح، ولا يمثل بيانات سوق مباشرة.
+      </div>
+    </section>
+
+    <section class="panel history">
+      <div class="side-title">سجل الصفقات</div>
+      <table>
+        <thead>
+          <tr>
+            <th>الأصل</th><th>الاتجاه</th><th>المبلغ</th>
+            <th>النتيجة</th><th>الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="history">
+          <tr><td colspan="5" class="empty">لا توجد صفقات حتى الآن</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <aside>
+    <section class="panel">
+      <div class="side-title">تنفيذ صفقة تجريبية</div>
+
+      <div class="field">
+        <label for="amount">مبلغ الصفقة ($)</label>
+        <input id="amount" type="number" min="1" max="10000"
+        step="1" value="100">
+      </div>
+
+      <div class="field">
+        <label for="duration">مدة الصفقة</label>
+        <select id="duration">
+          <option value="10">10 ثوانٍ</option>
+          <option value="30" selected>30 ثانية</option>
+          <option value="60">دقيقة واحدة</option>
+          <option value="120">دقيقتان</option>
+          <option value="300">5 دقائق</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>العائد الافتراضي</label>
+        <div class="info">80% · قيمة توضيحية للمحاكاة</div>
+      </div>
+
+      <div class="trade-buttons">
+        <button class="trade-btn up" id="upBtn">▲ صعود</button>
+        <button class="trade-btn down" id="downBtn">▼ هبوط</button>
+      </div>
+
+      <div class="info" id="tradeInfo">
+        اختر الأصل والمبلغ والمدة، ثم ابدأ صفقة تجريبية.
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="side-title">ملخص الحساب</div>
+      <div class="info">
+        نوع الحساب: تجريبي<br>
+        الرصيد الابتدائي: $10,000<br>
+        <span>الصفقات النشطة: </span><strong id="activeCount">0</strong><br>
+        <span>إجمالي الصفقات: </span><strong id="totalCount">0</strong>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<script>
+const SUPABASE_URL = "https://jowczhvatafpedxmhuuq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZCPC8nzz";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+let currentAsset = "EUR/USD";
+let currentPrice = 1.08450;
+let startPrice = currentPrice;
+let timeframe = 1;
+let candles = [];
+let trades = [];
+let activeTrades = 0;
+let wallet = 10000;
+let tickTimer = null;
+
+const $ = id => document.getElementById(id);
+
+function showMessage(text, type="error") {
+  const box = $("message");
+  box.textContent = text;
+  box.className = type;
+}
+
+function walletKey() {
+  return "eqo_demo_wallet_" + currentUser.id;
+}
+
+function loadWallet() {
+  const saved = localStorage.getItem(walletKey());
+  wallet = saved === null ? 10000 : Number(saved);
+  if (!Number.isFinite(wallet) || wallet < 0) wallet = 10000;
+  saveWallet();
+  updateBalance();
+}
+
+function saveWallet() {
+  localStorage.setItem(walletKey(), String(wallet));
+}
+
+function updateBalance() {
+  $("balance").textContent = "$" + wallet.toLocaleString(
+    "en-US",{minimumFractionDigits:2,maximumFractionDigits:2}
+  );
+}
+
+function precision() {
+  if (currentAsset === "USD/JPY") return 3;
+  if (currentAsset === "GOLD" || currentAsset === "BTC/USD") return 2;
+  return 5;
+}
+
+function formatPrice(value) {
+  return Number(value).toFixed(precision());
+}
+
+function seedCandles() {
+  candles = [];
+  let p = currentPrice;
+  for (let i=0;i<65;i++) {
+    const open = p;
+    const close = p + (Math.random()-.49) * p * .001;
+    candles.push({
+      open,
+      close,
+      high:Math.max(open,close)+p*.00025,
+      low:Math.min(open,close)-p*.00025
+    });
+    p = close;
+  }
+  currentPrice = p;
+  startPrice = p;
+  updatePrice();
+  drawChart();
+}
+
+function updatePrice() {
+  $("price").textContent = formatPrice(currentPrice);
+  const pct = ((currentPrice-startPrice)/startPrice)*100;
+  $("priceChange").textContent =
+    (pct>=0?"+":"") + pct.toFixed(3) + "%";
+  $("priceChange").style.color = pct>=0 ?
+    "var(--green)" : "var(--red)";
+}
+
+function tick() {
+  const old = currentPrice;
+  const movement = (Math.random()-.49) * currentPrice * .00035;
+  currentPrice = Math.max(.00001,currentPrice+movement);
+
+  const last = candles[candles.length-1];
+  last.close = currentPrice;
+  last.high = Math.max(last.high,currentPrice);
+  last.low = Math.min(last.low,currentPrice);
+
+  if (Math.random()>.86) {
+    candles.push({
+      open:old,close:currentPrice,
+      high:Math.max(old,currentPrice),
+      low:Math.min(old,currentPrice)
+    });
+    if (candles.length>65) candles.shift();
+  }
+
+  updatePrice();
+  drawChart();
+}
+
+function drawChart() {
+  const canvas = $("chart");
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width*dpr;
+  canvas.height = rect.height*dpr;
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  const w=rect.width,h=rect.height;
+  ctx.clearRect(0,0,w,h);
+
+  const pad={top:20,right:65,bottom:25,left:12};
+  const cw=w-pad.left-pad.right;
+  const ch=h-pad.top-pad.bottom;
+
+  const values=candles.flatMap(c=>[c.high,c.low]);
+  let max=Math.max(...values);
+  let min=Math.min(...values);
+  const extra=(max-min)*.12 || currentPrice*.001;
+  max+=extra;min-=extra;
+
+  const y=v=>pad.top+(max-v)/(max-min)*ch;
+
+  ctx.font="11px Arial";
+  ctx.strokeStyle="#28303c";
+  ctx.fillStyle="#9299aa";
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=5;i++){
+    const yy=pad.top+ch*i/5;
+    ctx.beginPath();ctx.moveTo(pad.left,yy);
+    ctx.lineTo(w-pad.right,yy);ctx.stroke();
+    const val=max-(max-min)*i/5;
+    ctx.fillText(val.toFixed(precision()),w-pad.right+6,yy+4);
+  }
+
+  const gap=cw/candles.length;
+  const body=Math.max(2,gap*.56);
+
+  candles.forEach((c,i)=>{
+    const x=pad.left+i*gap+gap/2;
+    const color=c.close>=c.open?"#12bd83":"#f05261";
+    ctx.strokeStyle=color;ctx.fillStyle=color;
+
+    ctx.beginPath();
+    ctx.moveTo(x,y(c.high));ctx.lineTo(x,y(c.low));ctx.stroke();
+
+    const top=y(Math.max(c.open,c.close));
+    const bottom=y(Math.min(c.open,c.close));
+    ctx.fillRect(x-body/2,top,body,Math.max(1,bottom-top));
+  });
+
+  const py=y(currentPrice);
+  ctx.strokeStyle="#1677ff";
+  ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(pad.left,py);
+  ctx.lineTo(w-pad.right,py);ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle="#1677ff";
+  ctx.fillRect(w-pad.right,py-9,64,18);
+  ctx.fillStyle="#fff";
+  ctx.fillText(formatPrice(currentPrice),w-pad.right+4,py+4);
+}
+
+function selectAsset(button) {
+  document.querySelectorAll(".asset").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  currentAsset=button.dataset.name;
+  currentPrice=Number(button.dataset.price);
+  startPrice=currentPrice;
+  $("assetName").textContent=currentAsset;
+  seedCandles();
+}
+
+document.querySelectorAll(".asset").forEach(button=>{
+  button.addEventListener("click",()=>selectAsset(button));
+});
+
+document.querySelectorAll("[data-time]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll("[data-time]").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    timeframe=Number(button.dataset.time);
+    $("tradeInfo").textContent="تم اختيار الإطار الزمني: "+timeframe+" دقيقة.";
+  });
+});
+
+function updateCounters() {
+  $("activeCount").textContent=activeTrades;
+  $("totalCount").textContent=trades.length;
+}
+
+function addHistory(trade) {
+  const row=document.createElement("tr");
+  const result=trade.won ? "+" : "-";
+  const direction=trade.direction==="up" ? "صعود" : "هبوط";
+  row.innerHTML=`
+    <td>${trade.asset}</td>
+    <td>${direction}</td>
+    <td>$${trade.amount.toFixed(2)}</td>
+    <td class="${trade.won?"win":"loss"}">${result}$${Math.abs(trade.profit).toFixed(2)}</td>
+    <td>${trade.won?"ربح تجريبي":"خسارة تجريبية"}</td>
+  `;
+  if (trades.length===1) $("history").innerHTML="";
+  $("history").prepend(row);
+}
+
+function placeTrade(direction) {
+  const amount=Number($("amount").value);
+  const duration=Number($("duration").value);
+
+  if (!Number.isFinite(amount) || amount<=0) {
+    showMessage("أدخل مبلغاً صحيحاً للصفقة.");
+    return;
+  }
+  if (amount>wallet) {
+    showMessage("رصيدك التجريبي لا يكفي لهذه الصفقة.");
+    return;
+  }
+
+  wallet-=amount;
+  saveWallet();
+  updateBalance();
+
+  const trade={
+    asset:currentAsset,
+    direction,
+    amount,
+    entry:currentPrice,
+    started:Date.now(),
+    duration,
+    userId:currentUser.id
+  };
+
+  activeTrades++;
+  updateCounters();
+  showMessage("بدأت الصفقة التجريبية. انتظر انتهاء المدة.","ok");
+  $("tradeInfo").textContent=
+    "سعر الدخول: "+formatPrice(trade.entry)+
+    " · الوقت المتبقي: "+duration+" ثانية";
+
+  const finishTimer=setInterval(()=>{
+    const elapsed=(Date.now()-trade.started)/1000;
+    const remaining=Math.max(0,Math.ceil(duration-elapsed));
+    $("tradeInfo").textContent=
+      "الصفقة قيد المحاكاة · الوقت المتبقي: "+remaining+" ثانية";
+
+    if (remaining<=0) {
+      clearInterval(finishTimer);
+      finishTrade(trade);
+    }
+  },250);
+}
+
+function finishTrade(trade) {
+  const won = trade.direction==="up" ?
+    currentPrice>trade.entry : currentPrice<trade.entry;
+
+  const profit=won ? trade.amount*.80 : -trade.amount;
+  wallet+=won ? trade.amount+profit : 0;
+
+  saveWallet();
+  updateBalance();
+
+  trade.won=won;
+  trade.profit=profit;
+  trades.push(trade);
+  activeTrades--;
+
+  addHistory(trade);
+  updateCounters();
+
+  $("tradeInfo").textContent=won ?
+    "انتهت الصفقة بنتيجة ربح تجريبي: +$"+profit.toFixed(2) :
+    "انتهت الصفقة بخسارة تجريبية: -$"+trade.amount.toFixed(2);
+
+  showMessage("انتهت الصفقة التجريبية.","ok");
+}
+
+$("upBtn").addEventListener("click",()=>placeTrade("up"));
+$("downBtn").addEventListener("click",()=>placeTrade("down"));
+
+$("logoutBtn").addEventListener("click",async()=>{
+  $("logoutBtn").disabled=true;
+  const {error}=await supabaseClient.auth.signOut();
+  if(error){
+    showMessage("تعذر تسجيل الخروج: "+error.message);
+    $("logoutBtn").disabled=false;
+    return;
+  }
+  window.location.href="index.html";
+});
+
+async function init() {
+  try {
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error) throw error;
+
+    if(!data.session){
+      window.location.replace("index.html");
+      return;
+    }
+
+    currentUser=data.session.user;
+    loadWallet();
+    seedCandles();
+    tickTimer=setInterval(tick,1000);
+  } catch(error) {
+    showMessage("تعذر التحقق من جلسة الدخول: "+error.message);
+  }
+}
+
+window.addEventListener("resize",drawChart);
+init();
+</script>
+</body>
+</html>
+
