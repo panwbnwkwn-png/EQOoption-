@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,206 +6,178 @@
 <title>EQOOption - الحساب</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<link rel="stylesheet"
- href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
 
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;min-height:100vh;background:#111216;color:#f5f6fa;
-  font-family:Arial,Tahoma,sans-serif;display:flex;
-  justify-content:center;align-items:center;padding:24px 14px
+ margin:0;min-height:100vh;background:#111216;color:#f5f6fa;
+ font-family:Arial,Tahoma,sans-serif;display:flex;
+ justify-content:center;align-items:center;padding:24px 14px
 }
 .container{width:100%;max-width:560px}
 .logo{text-align:center;font-size:34px;font-weight:900;margin:0 0 22px}
 .logo span{color:#2678ff}
 .notice{background:#101a2b;border:1px solid #0755a9;border-radius:14px;
-  padding:18px;margin-bottom:22px;line-height:1.8}
+ padding:18px;margin-bottom:22px;line-height:1.8}
 .notice strong{color:#3284ff;font-size:19px}
 .notice p{margin:5px 0 0;color:#c5ccda}
 .card{background:#424b60;border-radius:18px;padding:26px 24px;
-  box-shadow:0 12px 35px #0005}
+ box-shadow:0 12px 35px #0005}
 .tabs{display:flex;background:#596174;border-radius:12px;padding:7px;margin-bottom:24px}
 .tabs button{width:50%;border:0;background:transparent;color:#b8c2d2;
-  padding:16px 8px;font-size:19px;font-weight:bold;border-radius:9px;cursor:pointer}
+ padding:16px 8px;font-size:19px;font-weight:bold;border-radius:9px;cursor:pointer}
 .tabs button.active{background:#30394e;color:#fff;border-bottom:4px solid #0875ff}
 .form{display:none}
 .form.active{display:block}
-.field{margin:22px 0}
+.field{margin:19px 0}
 .field label{display:block;color:#e0e6f0;font-size:16px;font-weight:bold;margin-bottom:9px}
-.field input{
-  width:100%;min-height:56px;border:2px solid #343a49;
-  border-radius:13px;background:#20232d;color:#fff;
-  padding:14px;font-size:17px;outline:none
+.field input,.field select{
+ width:100%;min-height:56px;border:2px solid #343a49;
+ border-radius:13px;background:#20232d;color:#fff;
+ padding:14px;font-size:16px;outline:none
 }
-.field input:focus{border-color:#2678ff}
-.phone-control{width:100%;direction:ltr}
+.field input:focus,.field select:focus{border-color:#2678ff}
+.field select{cursor:pointer}
+.field select option{background:#20232d;color:#fff}
 .iti{width:100%;direction:ltr}
 .iti input{
-  width:100%!important;
-  min-height:56px!important;
-  background:#20232d!important;
-  color:#fff!important;
-  border:2px solid #343a49!important;
-  border-radius:13px!important;
-  padding-left:95px!important;
-  font-size:17px!important
+ width:100%!important;min-height:56px!important;
+ background:#20232d!important;color:#fff!important;
+ border:2px solid #343a49!important;border-radius:13px!important;
+ padding-left:95px!important;font-size:17px!important
 }
 .iti__country-list{
-  background:#20232d!important;
-  color:#fff!important;
-  border:1px solid #596174!important;
-  max-height:260px!important;
-  direction:ltr;
-  z-index:9999
+ background:#20232d!important;color:#fff!important;
+ border:1px solid #596174!important;max-height:260px!important;
+ direction:ltr;z-index:9999
 }
 .iti__country{padding:9px 12px!important}
-.iti__country:hover,.iti__country.iti__highlight{
-  background:#34435d!important
-}
-.iti__search-input{
-  width:100%!important;
-  background:#111216!important;
-  color:#fff!important;
-  border:1px solid #596174!important;
-  padding:10px!important
-}
+.iti__country:hover,.iti__country.iti__highlight{background:#34435d!important}
 .iti__dial-code{color:#83b5ff!important}
-.check-row{display:flex;align-items:flex-start;gap:12px;margin:20px 0;line-height:1.7;font-size:15px}
+.check-row{display:flex;align-items:flex-start;gap:12px;margin:20px 0;line-height:1.7;font-size:14px}
 .check-row input{width:22px;height:22px;flex-shrink:0;margin-top:3px;accent-color:#0875ff}
 .submit{width:100%;border:0;border-radius:14px;
-  background:linear-gradient(100deg,#287bff,#0062f5);color:white;
-  font-size:21px;font-weight:bold;padding:19px;margin-top:15px;cursor:pointer}
+ background:linear-gradient(100deg,#287bff,#0062f5);color:white;font-size:21px;font-weight:bold;padding:19px;margin-top:15px;cursor:pointer}
 .submit:disabled{opacity:.6;cursor:wait}
 .message{display:none;padding:13px;border-radius:10px;margin:15px 0;
-  line-height:1.7;background:#172b42;color:#dceaff;overflow-wrap:anywhere}
+ line-height:1.7;background:#172b42;color:#dceaff;overflow-wrap:anywhere}
 .message.show{display:block}
 .message.error{background:#48252b;color:#ffe1e1}
 .footer{text-align:center;color:#9da9bd;font-size:13px;margin-top:22px}
 @media(max-width:420px){
-  .card{padding:22px 16px}
-  .tabs button{font-size:17px}
-  .logo{font-size:28px}
+ .card{padding:22px 16px}
+ .tabs button{font-size:17px}
+ .logo{font-size:28px}
 }
 </style>
 </head>
 
 <body>
 <div class="container">
-  <div class="logo">EQO<span>Option</span></div>
+ <div class="logo">EQO<span>Option</span></div>
 
-  <div class="notice">
-    <strong>دخول آمن · EQOOption</strong>
-    <p>سجّل الدخول أو أنشئ حسابك للوصول إلى منصتك.</p>
+ <div class="notice">
+  <strong>دخول آمن · EQOOption</strong>
+  <p>أنشئ حسابك أو سجّل الدخول للوصول إلى منصتك.</p>
+ </div>
+
+ <main class="card">
+  <div class="tabs">
+   <button type="button" id="registerTab" class="active">التسجيل</button>
+   <button type="button" id="loginTab">تسجيل الدخول</button>
   </div>
 
-  <main class="card">
-    <div class="tabs">
-      <button type="button" id="registerTab" class="active">التسجيل</button>
-      <button type="button" id="loginTab">تسجيل الدخول</button>
-    </div>
+  <div id="message" class="message" role="status"></div>
 
-    <div id="message" class="message" role="status"></div>
+  <!-- نموذج التسجيل -->
+  <form id="registerForm" class="form active">
 
-    <!-- التسجيل -->
-    <form id="registerForm" class="form active">
+   <div class="field">
+    <label for="residenceCountry">بلد الإقامة</label>
+    <select id="residenceCountry" required>
+     <option value="">جارٍ تحميل قائمة الدول...</option>
+    </select>
+   </div>
 
-      <div class="field">
-        <label for="regPhone">بلد الإقامة ورقم الهاتف</label>
-        <input
-          id="regPhone"
-          class="phone-control"
-          type="tel"
-          inputmode="tel"
-          autocomplete="tel"
-          placeholder="ابحث عن الدولة أو أدخل رقم الهاتف"
-          required>
-      </div>
+   <div class="field">
+    <label for="regPhone">رقم الهاتف</label>
+    <input id="regPhone" type="tel" inputmode="tel"
+     autocomplete="tel" placeholder="أدخل رقم الهاتف" required>
+   </div>
 
-      <div class="field">
-        <label for="regEmail">البريد الإلكتروني</label>
-        <input id="regEmail" type="email"
-               placeholder="أدخل بريدك الإلكتروني"
-               autocomplete="email" required>
-      </div>
+   <div class="field">
+    <label for="regName">الاسم الكامل</label>
+    <input id="regName" type="text" autocomplete="name"
+     placeholder="الاسم الأول واسم العائلة" required>
+   </div>
 
-      <div class="field">
-        <label for="regReferral">رمز الإحالة (اختياري)</label>
-        <input id="regReferral" type="text"
-               placeholder="أدخل رمز الإحالة">
-      </div>
+   <div class="field">
+    <label for="regEmail">البريد الإلكتروني</label>
+    <input id="regEmail" type="email" autocomplete="email"
+     placeholder="أدخل بريدك الإلكتروني" required>
+   </div>
 
-      <div class="field">
-        <label for="regPassword">كلمة المرور</label>
-        <input id="regPassword" type="password"
-               placeholder="أنشئ كلمة مرور"
-               minlength="8" autocomplete="new-password" required>
-      </div>
+ <div class="field">
+    <label for="regReferral">رمز الإحالة (اختياري)</label>
+    <input id="regReferral" type="text" placeholder="أدخل رمز الإحالة">
+   </div>
 
-      <div class="check-row">
-        <input id="ageAgree" type="checkbox" required>
-        <label for="ageAgree">
-          أؤكد أن عمري 18 عاماً أو أكثر وأوافق على شروط المنصة.
-        </label>
-      </div>
+   <div class="field">
+    <label for="regPassword">كلمة المرور</label>
+    <input id="regPassword" type="password" minlength="8"
+     autocomplete="new-password" placeholder="8 أحرف على الأقل" required>
+   </div>
 
-      <button class="submit" id="registerButton" type="submit">
-        إنشاء الحساب
-      </button>
-    </form>
+   <div class="field">
+    <label for="confirmPassword">تأكيد كلمة المرور</label>
+    <input id="confirmPassword" type="password" minlength="8"
+     autocomplete="new-password" placeholder="أعد كتابة كلمة المرور" required>
+   </div>
 
-    <!-- تسجيل الدخول -->
-    <form id="loginForm" class="form">
-      <div class="field">
-        <label for="loginEmail">البريد الإلكتروني</label>
-        <input id="loginEmail" type="email"
-               placeholder="أدخل بريدك الإلكتروني"
-               autocomplete="email" required>
-      </div>
+   <div class="check-row">
+    <input id="ageAgree" type="checkbox" required>
+    <label for="ageAgree">
+     أؤكد أن عمري 18 عاماً أو أكثر وأوافق على شروط المنصة.
+    </label>
+   </div>
 
-      <div class="field">
-        <label for="loginPassword">كلمة المرور</label>
-        <input id="loginPassword" type="password"
-               placeholder="كلمة المرور"
-               autocomplete="current-password" required>
-      </div>
+   <button class="submit" id="registerButton" type="submit">إنشاء الحساب</button>
+  </form>
 
-      <button class="submit" id="loginButton" type="submit">
-        تسجيل الدخول
-      </button>
-    </form>
-  </main>
+  <!-- نموذج تسجيل الدخول -->
+  <form id="loginForm" class="form">
+   <div class="field">
+    <label for="loginEmail">البريد الإلكتروني</label>
+    <input id="loginEmail" type="email" autocomplete="email"
+     placeholder="أدخل بريدك الإلكتروني" required>
+   </div>
 
-  <div class="footer">EQOOption · منصة الحسابات</div>
+   <div class="field">
+    <label for="loginPassword">كلمة المرور</label>
+    <input id="loginPassword" type="password"
+     autocomplete="current-password" placeholder="كلمة المرور" required>
+   </div>
+
+   <button class="submit" id="loginButton" type="submit">تسجيل الدخول</button>
+  </form>
+ </main>
+
+ <div class="footer">EQOOption · منصة الحسابات</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
 
 <script>
-/* بيانات Supabase */
+/* إعداد Supabase */
 const SUPABASE_URL = "https://jowczhvatafpedxmhuuq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZCPC8nzz";
+const SUPABASE_KEY = "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz";
 
 const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-/* إعداد قائمة دول العالم */
-const phoneInput = document.getElementById("regPhone");
-
-const phoneSelector = window.intlTelInput(phoneInput, {
-  initialCountry: "ye",
-  separateDialCode: true,
-  nationalMode: true,
-  allowDropdown: true,
-  countrySearch: true,
-  autoPlaceholder: "polite",
-  preferredCountries: ["ye", "sa", "ae", "eg"],
-  useFullscreenPopup: true
-});
+ SUPABASE_URL,
+ SUPABASE_KEY
+ );
 
 /* عناصر الصفحة */
 const registerForm = document.getElementById("registerForm");
@@ -214,144 +185,257 @@ const loginForm = document.getElementById("loginForm");
 const registerTab = document.getElementById("registerTab");
 const loginTab = document.getElementById("loginTab");
 const messageBox = document.getElementById("message");
+const residenceCountry = document.getElementById("residenceCountry");
+const phoneInput = document.getElementById("regPhone");
 
-function showMessage(message, isError = false) {
-  messageBox.textContent = message;
-  messageBox.className =
-    "message show" + (isError ? " error" : "");
-}
-
-function clearMessage() {
-  messageBox.textContent = "";
-  messageBox.className = "message";
-}
-
-/* التبديل بين التسجيل والدخول */
-function showForm(formName) {
-  clearMessage();
-
-  const isRegister = formName === "register";
-
-  registerForm.classList.toggle("active", isRegister);
-  loginForm.classList.toggle("active", !isRegister);
-  registerTab.classList.toggle("active", isRegister);
-  loginTab.classList.toggle("active", !isRegister);
-}
-
-registerTab.addEventListener("click", () => showForm("register"));
-loginTab.addEventListener("click", () => showForm("login"));
-
-/* إنشاء حساب */
-registerForm.addEventListener("submit", async function(event) {
-  event.preventDefault();
-  clearMessage();
-
-  const button = document.getElementById("registerButton");
-
-  const email = document.getElementById("regEmail").value.trim();
-  const password = document.getElementById("regPassword").value;
-  const referral = document.getElementById("regReferral").value.trim();
-
-  const countryData = phoneSelector.getSelectedCountryData();
-
-  if (!countryData || !countryData.iso2) {
-    showMessage("يرجى اختيار بلد الإقامة.", true);
-    return;
-  }
-
-  if (!phoneSelector.isValidNumber()) {
-    showMessage("يرجى اختيار الدولة وإدخال رقم هاتف صحيح.", true);
-    return;
-  }
-
-  if (password.length < 8) {
-    showMessage("يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.", true);
-    return;
-  }
-
-  const fullPhone = phoneSelector.getNumber();
-  const countryCode = countryData.iso2.toUpperCase();
-  const countryName = countryData.name;
-
-  button.disabled = true;
-  button.textContent = "جارٍ إنشاء الحساب...";
-
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          phone: fullPhone,
-          country_code: countryCode,
-          country_name: countryName,
-          referral_code: referral || null
-        }
-      }
-    });
-
-    if (error) throw error;
-
-    if (data.session) {
-      showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
-      window.location.href = "trading.html";
-    } else {
-      showMessage(
-        "تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني واضغط رابط التأكيد، ثم سجّل الدخول."
-      );
-
-      showForm("login");
-      document.getElementById("loginEmail").value = email;
-    }
-
-  } catch (error) {
-    showMessage("تعذر إنشاء الحساب: " + error.message, true);
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "إنشاء الحساب";
-  }
+/* قائمة الدول من مكتبة أرقام الهواتف */
+const phoneSelector = window.intlTelInput(phoneInput, {
+ initialCountry:"ye",
+ separateDialCode:true,
+ nationalMode:true,
+ allowDropdown:true,
+ countrySearch:true,
+ autoPlaceholder:"polite",
+ preferredCountries:["ye","sa","ae","eg"],
+ useFullscreenPopup:true
 });
 
-/* تسجيل الدخول بالبريد وكلمة المرور */
-loginForm.addEventListener("submit", async function(event) {
-  event.preventDefault();
-  clearMessage();
+/* أسماء الدول بالعربية والإنجليزية */
+function loadCountries(){
+ const countries = phoneSelector.getCountryData();
+ const arabicNames = new Intl.DisplayNames(["ar"], {type:"region"});
+ const englishNames = new Intl.DisplayNames(["en"], {type:"region"});
 
-  const button = document.getElementById("loginButton");
+ residenceCountry.innerHTML = '<option value="">اختر بلد الإقامة</option>';
 
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+ const sorted = countries.map(country => {
+  const iso = country.iso2.toUpperCase();
+  return {
+   iso,
+   ar:arabicNames.of(iso),
+   en:englishNames.of(iso)
+  };
+ }).filter(country => country.ar && country.en)
+   .sort((a,b) => a.ar.localeCompare(b.ar,"ar"));
 
-  button.disabled = true;
-  button.textContent = "جارٍ تسجيل الدخول...";
+ sorted.forEach(country => {
+  const option = document.createElement("option");
+  option.value = country.iso.toLowerCase();
+  option.textContent = country.ar + " — " + country.en;
+  residenceCountry.appendChild(option);
+ });
 
-  try {
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
+ residenceCountry.value = "ye";
+ phoneSelector.setCountry("ye");
+}
 
-    if (error) throw error;
+/* تغيير مفتاح الهاتف عند تغيير بلد الإقامة */
+residenceCountry.addEventListener("change", function(){
+ if(this.value){
+  phoneSelector.setCountry(this.value);
+ }
+});
+/* الرسائل */
+function showMessage(message,isError=false){
+ messageBox.textContent = message;
+ messageBox.className = "message show" + (isError ? " error" : "");
+}
 
-    if (!data.session) {
-      throw new Error("لم يتم إنشاء جلسة دخول. حاول مرة أخرى.");
+function clearMessage(){
+ messageBox.textContent = "";
+ messageBox.className = "message";
+}
+
+/* التبديل بين النموذجين */
+function showForm(name){
+ clearMessage();
+ const isRegister = name === "register";
+ registerForm.classList.toggle("active",isRegister);
+ loginForm.classList.toggle("active",!isRegister);
+ registerTab.classList.toggle("active",isRegister);
+ loginTab.classList.toggle("active",!isRegister);
+}
+
+registerTab.addEventListener("click",()=>showForm("register"));
+loginTab.addEventListener("click",()=>showForm("login"));
+
+/* التسجيل */
+registerForm.addEventListener("submit",async function(event){
+ event.preventDefault();
+ clearMessage();
+
+ const button = document.getElementById("registerButton");
+ const countryIso = residenceCountry.value;
+ const country = phoneSelector.getSelectedCountryData();
+
+ const name = document.getElementById("regName").value.trim();
+ const email = document.getElementById("regEmail").value.trim();
+ const password = document.getElementById("regPassword").value;
+ const confirm = document.getElementById("confirmPassword").value;
+ const referral = document.getElementById("regReferral").value.trim();
+
+ if(!countryIso){
+  showMessage("يرجى اختيار بلد الإقامة.",true);
+  return;
+ }
+
+ if(!phoneSelector.isValidNumber()){
+  showMessage("يرجى إدخال رقم هاتف صحيح مع اختيار مفتاح الدولة.",true);
+  return;
+ }
+
+ if(!name){
+  showMessage("يرجى إدخال الاسم الكامل.",true);
+  return;
+ }
+
+ if(password.length < 8){
+  showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.",true);
+  return;
+ }
+ /* الرسائل */
+function showMessage(message,isError=false){
+ messageBox.textContent = message;
+ messageBox.className = "message show" + (isError ? " error" : "");
+}
+
+function clearMessage(){
+ messageBox.textContent = "";
+ messageBox.className = "message";
+}
+
+/* التبديل بين النموذجين */
+function showForm(name){
+ clearMessage();
+ const isRegister = name === "register";
+ registerForm.classList.toggle("active",isRegister);
+ loginForm.classList.toggle("active",!isRegister);
+ registerTab.classList.toggle("active",isRegister);
+ loginTab.classList.toggle("active",!isRegister);
+}
+
+registerTab.addEventListener("click",()=>showForm("register"));
+loginTab.addEventListener("click",()=>showForm("login"));
+
+/* التسجيل */
+registerForm.addEventListener("submit",async function(event){
+ event.preventDefault();
+ clearMessage();
+
+ const button = document.getElementById("registerButton");
+ const countryIso = residenceCountry.value;
+ const country = phoneSelector.getSelectedCountryData();
+
+ const name = document.getElementById("regName").value.trim();
+ const email = document.getElementById("regEmail").value.trim();
+ const password = document.getElementById("regPassword").value;
+ const confirm = document.getElementById("confirmPassword").value;
+ const referral = document.getElementById("regReferral").value.trim();
+
+ if(!countryIso){
+  showMessage("يرجى اختيار بلد الإقامة.",true);
+  return;
+ }
+
+ if(!phoneSelector.isValidNumber()){
+  showMessage("يرجى إدخال رقم هاتف صحيح مع اختيار مفتاح الدولة.",true);
+  return;
+ }
+
+ if(!name){
+  showMessage("يرجى إدخال الاسم الكامل.",true);
+  return;
+ }
+
+ if(password.length < 8){
+  showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.",true);
+  return;
+ }
+
+ if(password !== confirm){
+  showMessage("كلمتا المرور غير متطابقتين.",true);
+  return;
+ }
+
+ if(!document.getElementById("ageAgree").checked){
+  showMessage("يرجى تأكيد العمر والموافقة على الشروط.",true);
+  return;
+ }
+
+ button.disabled = true;
+ button.textContent = "جارٍ إنشاء الحساب...";
+
+ try{
+  const fullPhone = phoneSelector.getNumber();
+  const residenceOption = residenceCountry.options[residenceCountry.selectedIndex];
+
+  const {data,error} = await supabaseClient.auth.signUp({
+   email,
+   password,
+   options:{
+    data:{
+     full_name:name,
+     phone:fullPhone,
+     residence_country_code:countryIso.toUpperCase(),
+     residence_country_name:residenceOption.textContent,
+     phone_country_code:country.dialCode,
+     referral_code:referral || null
     }
+   }
+  });
 
-    showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
-    window.location.href = "trading.html";
+  if(error) throw error;
 
-  } catch (error) {
-    showMessage("تعذر تسجيل الدخول: " + error.message, true);
+loadCountries();if(error) throw error;
 
-  } finally {
-    button.disabled = false;
-    button.textContent = "تسجيل الدخول";
+  if(data.session){
+   showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
+   window.location.href = "trading.html";
+  }else{
+   showMessage("تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول.");
+   showForm("login");
+   document.getElementById("loginEmail").value = email;
   }
+
+ }catch(error){
+  showMessage("تعذر إنشاء الحساب: " + error.message,true);
+ }finally{
+  button.disabled = false;
+  button.textContent = "إنشاء الحساب";
+ }
+});
+
+/* تسجيل الدخول */
+loginForm.addEventListener("submit",async function(event){
+ event.preventDefault();
+ clearMessage();
+
+ const button = document.getElementById("loginButton");
+ const email = document.getElementById("loginEmail").value.trim();
+ const password = document.getElementById("loginPassword").value;
+
+ button.disabled = true;
+ button.textContent = "جارٍ تسجيل الدخول...";
+
+ try{
+  const {data,error} = await supabaseClient.auth.signInWithPassword({
+   email,
+   password
+  });
+
+  if(error) throw error;
+  if(!data.session) throw new Error("تعذر إنشاء جلسة الدخول.");
+
+  showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
+  window.location.href = "trading.html";
+
+ }catch(error){
+  showMessage("تعذر تسجيل الدخول: " + error.message,true);
+ }finally{
+  button.disabled = false;
+  button.textContent = "تسجيل الدخول";
+ }
 });
 </script>
 </body>
 </html>
-
-      
