@@ -212,7 +212,18 @@ footer {
 
 <body>
 
-<header>
+<header><div class="account-mode">
+  <button id="demoModeBtn"
+          class="active"
+          onclick="switchTradingMode('demo')">
+    تجريبي
+  </button>
+
+  <button id="realModeBtn"
+          onclick="switchTradingMode('real')">
+    حقيقي
+  </button>
+</div>
   <div class="logo">
     <img src="assets/eqooption-logo.jpg" alt="EQOoption Logo">
     <div>EQ<span>Ooption</span></div>
