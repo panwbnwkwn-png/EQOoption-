@@ -228,3 +228,174 @@ body{
 
       <button class="submit" type="submit">إنشاء الحساب</button>
     </form>
+<!-- نموذج تسجيل الدخول -->
+<form id="loginForm" class="form">
+
+  <div class="field">
+    <label for="loginCountry">بلد الإقامة</label>
+    <select id="loginCountry" required>
+      <option value="+967">اليمن (+967)</option>
+      <option value="+966">السعودية (+966)</option>
+      <option value="+971">الإمارات (+971)</option>
+      <option value="+20">مصر (+20)</option>
+      <option value="+962">الأردن (+962)</option>
+      <option value="+965">الكويت (+965)</option>
+      <option value="+974">قطر (+974)</option>
+      <option value="+968">عُمان (+968)</option>
+      <option value="+973">البحرين (+973)</option>
+      <option value="+1">الولايات المتحدة (+1)</option>
+      <option value="+44">بريطانيا (+44)</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="loginPhone">رقم الهاتف</label>
+    <input id="loginPhone" type="tel"
+      placeholder="أدخل رقم الهاتف" required>
+  </div>
+
+  <div class="field">
+    <label for="loginPassword">كلمة المرور</label>
+    <input id="loginPassword" type="password"
+      placeholder="أدخل كلمة المرور" required>
+  </div>
+
+  <button class="submit" type="submit">تسجيل الدخول</button>
+</form>
+
+</main>
+
+<div class="footer">EQOOption · جميع الحقوق محفوظة</div>
+</div>
+
+<script>
+const SUPABASE_URL =
+  "https://jowczhvatafpedxmhuuq.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz";
+
+const supabaseClient =
+  window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* إظهار نموذج التسجيل أو الدخول */
+function showForm(type) {
+  document.getElementById("registerForm")
+    .classList.toggle("active", type === "register");
+
+  document.getElementById("loginForm")
+    .classList.toggle("active", type === "login");
+
+  document.getElementById("registerTab")
+    .classList.toggle("active", type === "register");
+
+  document.getElementById("loginTab")
+    .classList.toggle("active", type === "login");
+
+  showMessage("");
+}
+
+/* الرسائل */
+function showMessage(text) {
+  const box = document.getElementById("message");
+  box.textContent = text;
+  box.classList.toggle("show", Boolean(text));
+}
+
+/* تجهيز رقم الهاتف */
+function formatPhone(code, phone) {
+  const number = phone.replace(/\D/g, "");
+  return number ? code + number.replace(/^0+/, "") : "";
+}
+
+/* مزامنة رمز الدولة في التسجيل */
+document.getElementById("regCountry")
+  .addEventListener("change", function () {
+    document.getElementById("regCode").value = this.value;
+  });
+
+document.getElementById("regCode")
+  .addEventListener("change", function () {
+    document.getElementById("regCountry").value = this.value;
+  });
+
+/* التسجيل */
+document.getElementById("registerForm")
+  .addEventListener("submit", async function(event) {
+    event.preventDefault();
+    showMessage("جارٍ إنشاء الحساب...");
+
+    if (!document.getElementById("ageAgree").checked) {
+      showMessage("يرجى الموافقة على الشروط أولاً.");
+      return;
+    }
+
+    const code = document.getElementById("regCode").value;
+    const phone = formatPhone(
+      code, document.getElementById("regPhone").value
+    );
+
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPassword").value;
+    const referral = document.getElementById("regReferral").value.trim();
+
+    try {
+      const { data, error } = await supabaseClient.auth.signUp({
+        phone,
+        password,
+        options: {
+          data: {
+            email,
+            country_code: code,
+            referral_code: referral
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      showMessage(
+        data.session
+          ? "تم إنشاء الحساب بنجاح."
+          : "تم إرسال طلب التسجيل. أكمل التحقق من رقم الهاتف."
+      );
+
+      if (data.session) showForm("login");
+
+    } catch (error) {
+      showMessage("تعذر التسجيل: " + error.message);
+    }
+  });
+
+/* تسجيل الدخول */
+document.getElementById("loginForm")
+  .addEventListener("submit", async function(event) {
+    event.preventDefault();
+    showMessage("جارٍ تسجيل الدخول...");
+
+    const code = document.getElementById("loginCountry").value;
+    const phone = formatPhone(
+      code, document.getElementById("loginPhone").value
+    );
+    const password =
+      document.getElementById("loginPassword").value;
+
+    try {
+      const { error } =
+        await supabaseClient.auth.signInWithPassword({
+          phone,
+          password
+        });
+
+      if (error) throw error;
+
+      window.location.href = "trading.html";
+
+    } catch (error) {
+      showMessage("تعذر تسجيل الدخول: " + error.message);
+    }
+  });
+</script>
+
+</body>
+</html>
