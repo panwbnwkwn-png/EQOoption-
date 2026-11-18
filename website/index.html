@@ -206,7 +206,34 @@ footer {
   .logo {
     font-size: 21px;
   }
+}.account-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
 }
+
+.account-mode button {
+  padding: 10px 22px;
+  border: 1px solid #26364f;
+  border-radius: 8px;
+  background: #172338;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.account-mode button:hover {
+  background: #263b5c;
+}
+
+.account-mode button.active {
+  background: #00b894;
+  border-color: #00b894;
+  color: #ffffff;
+    }
 </style>
 </head>
 
