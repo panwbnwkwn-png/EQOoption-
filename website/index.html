@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -58,7 +59,8 @@ body{
 .check-row{display:flex;align-items:flex-start;gap:12px;margin:20px 0;line-height:1.7;font-size:14px}
 .check-row input{width:22px;height:22px;flex-shrink:0;margin-top:3px;accent-color:#0875ff}
 .submit{width:100%;border:0;border-radius:14px;
- background:linear-gradient(100deg,#287bff,#0062f5);color:white;font-size:21px;font-weight:bold;padding:19px;margin-top:15px;cursor:pointer}
+ background:linear-gradient(100deg,#287bff,#0062f5);color:white;
+ font-size:21px;font-weight:bold;padding:19px;margin-top:15px;cursor:pointer}
 .submit:disabled{opacity:.6;cursor:wait}
 .message{display:none;padding:13px;border-radius:10px;margin:15px 0;
  line-height:1.7;background:#172b42;color:#dceaff;overflow-wrap:anywhere}
@@ -88,11 +90,9 @@ body{
    <button type="button" id="loginTab">تسجيل الدخول</button>
   </div>
 
-  <div id="message" class="message" role="status"></div>
+  <div id="message" class="message" role="status" aria-live="polite"></div>
 
-  <!-- نموذج التسجيل -->
   <form id="registerForm" class="form active">
-
    <div class="field">
     <label for="residenceCountry">بلد الإقامة</label>
     <select id="residenceCountry" required>
@@ -118,7 +118,7 @@ body{
      placeholder="أدخل بريدك الإلكتروني" required>
    </div>
 
- <div class="field">
+   <div class="field">
     <label for="regReferral">رمز الإحالة (اختياري)</label>
     <input id="regReferral" type="text" placeholder="أدخل رمز الإحالة">
    </div>
@@ -145,7 +145,6 @@ body{
    <button class="submit" id="registerButton" type="submit">إنشاء الحساب</button>
   </form>
 
-  <!-- نموذج تسجيل الدخول -->
   <form id="loginForm" class="form">
    <div class="field">
     <label for="loginEmail">البريد الإلكتروني</label>
@@ -170,14 +169,16 @@ body{
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
 
 <script>
+"use strict";
+
 /* إعداد Supabase */
 const SUPABASE_URL = "https://jowczhvatafpedxmhuuq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz";
 
 const supabaseClient = window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
- );
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 /* عناصر الصفحة */
 const registerForm = document.getElementById("registerForm");
@@ -188,254 +189,266 @@ const messageBox = document.getElementById("message");
 const residenceCountry = document.getElementById("residenceCountry");
 const phoneInput = document.getElementById("regPhone");
 
-/* قائمة الدول من مكتبة أرقام الهواتف */
-const phoneSelector = window.intlTelInput(phoneInput, {
- initialCountry:"ye",
- separateDialCode:true,
- nationalMode:true,
- allowDropdown:true,
- countrySearch:true,
- autoPlaceholder:"polite",
- preferredCountries:["ye","sa","ae","eg"],
- useFullscreenPopup:true
-});
+/*
+ قائمة رموز الدول والأقاليم ISO 3166-1.
+ قائمة الإقامة مستقلة عن قائمة مفاتيح الهاتف.
+*/
+const ALL_COUNTRY_CODES = [
+"AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AX",
+"AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BL","BM","BN","BO","BQ",
+"BR","BS","BT","BV","BW","BY","BZ","CA","CC","CD","CF","CG","CH","CI","CK",
+"CL","CM","CN","CO","CR","CU","CV","CW","CX","CY","CZ","DE","DJ","DK","DM",
+"DO","DZ","EC","EE","EG","EH","ER","ES","ET","FI","FJ","FK","FM","FO","FR",
+"GA","GB","GD","GE","GF","GG","GH","GI","GL","GM","GN","GP","GQ","GR","GS",
+"GT","GU","GW","GY","HK","HM","HN","HR","HT","HU","ID","IE","IL","IM","IN",
+"IO","IQ","IR","IS","IT","JE","JM","JO","JP","KE","KG","KH","KI","KM","KN",
+"KP","KR","KW","KY","KZ","LA","LB","LC","LI","LK","LR","LS","LT","LU","LV",
+"LY","MA","MC","MD","ME","MF","MG","MH","MK","ML","MM","MN","MO","MP","MQ",
+"MR","MS","MT","MU","MV","MW","MX","MY","MZ","NA","NC","NE","NF","NG","NI",
+"NL","NO","NP","NR","NU","NZ","OM","PA","PE","PF","PG","PH","PK","PL","PM",
+"PN","PR","PS","PT","PW","PY","QA","RE","RO","RS","RU","RW","SA","SB","SC",
+"SD","SE","SG","SH","SI","SJ","SK","SL","SM","SN","SO","SR","SS","ST","SV",
+"SX","SY","SZ","TC","TD","TF","TG","TH","TJ","TK","TL","TM","TN","TO","TR",
+"TT","TV","TW","TZ","UA","UG","UM","US","UY","UZ","VA","VC","VE","VG","VI",
+"VN","VU","WF","WS","YE","YT","ZA","ZM","ZW"
+];
 
-/* أسماء الدول بالعربية والإنجليزية */
-function loadCountries(){
- const countries = phoneSelector.getCountryData();
- const arabicNames = new Intl.DisplayNames(["ar"], {type:"region"});
- const englishNames = new Intl.DisplayNames(["en"], {type:"region"});
+/* أداة الهاتف */
+let phoneSelector = null;
 
- residenceCountry.innerHTML = '<option value="">اختر بلد الإقامة</option>';
-
- const sorted = countries.map(country => {
-  const iso = country.iso2.toUpperCase();
-  return {
-   iso,
-   ar:arabicNames.of(iso),
-   en:englishNames.of(iso)
-  };
- }).filter(country => country.ar && country.en)
-   .sort((a,b) => a.ar.localeCompare(b.ar,"ar"));
-
- sorted.forEach(country => {
-  const option = document.createElement("option");
-  option.value = country.iso.toLowerCase();
-  option.textContent = country.ar + " — " + country.en;
-  residenceCountry.appendChild(option);
- });
-
- residenceCountry.value = "ye";
- phoneSelector.setCountry("ye");
+try {
+  if (window.intlTelInput) {
+    phoneSelector = window.intlTelInput(phoneInput, {
+      initialCountry: "ye",
+      separateDialCode: true,
+      nationalMode: true,
+      allowDropdown: true,
+      countrySearch: true,
+      autoPlaceholder: "polite",
+      preferredCountries: ["ye","sa","ae","eg"],
+      useFullscreenPopup: true
+    });
+  }
+} catch (error) {
+  console.error("Phone input initialization error:", error);
 }
 
-/* تغيير مفتاح الهاتف عند تغيير بلد الإقامة */
-residenceCountry.addEventListener("change", function(){
- if(this.value){
-  phoneSelector.setCountry(this.value);
- }
-});
-/* الرسائل */
-function showMessage(message,isError=false){
- messageBox.textContent = message;
- messageBox.className = "message show" + (isError ? " error" : "");
-}
-
-function clearMessage(){
- messageBox.textContent = "";
- messageBox.className = "message";
-}
-
-/* التبديل بين النموذجين */
-function showForm(name){
- clearMessage();
- const isRegister = name === "register";
- registerForm.classList.toggle("active",isRegister);
- loginForm.classList.toggle("active",!isRegister);
- registerTab.classList.toggle("active",isRegister);
- loginTab.classList.toggle("active",!isRegister);
-}
-
-registerTab.addEventListener("click",()=>showForm("register"));
-loginTab.addEventListener("click",()=>showForm("login"));
-
-/* التسجيل */
-registerForm.addEventListener("submit",async function(event){
- event.preventDefault();
- clearMessage();
-
- const button = document.getElementById("registerButton");
- const countryIso = residenceCountry.value;
- const country = phoneSelector.getSelectedCountryData();
-
- const name = document.getElementById("regName").value.trim();
- const email = document.getElementById("regEmail").value.trim();
- const password = document.getElementById("regPassword").value;
- const confirm = document.getElementById("confirmPassword").value;
- const referral = document.getElementById("regReferral").value.trim();
-
- if(!countryIso){
-  showMessage("يرجى اختيار بلد الإقامة.",true);
-  return;
- }
-
- if(!phoneSelector.isValidNumber()){
-  showMessage("يرجى إدخال رقم هاتف صحيح مع اختيار مفتاح الدولة.",true);
-  return;
- }
-
- if(!name){
-  showMessage("يرجى إدخال الاسم الكامل.",true);
-  return;
- }
-
- if(password.length < 8){
-  showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.",true);
-  return;
- }
- /* الرسائل */
-function showMessage(message,isError=false){
- messageBox.textContent = message;
- messageBox.className = "message show" + (isError ? " error" : "");
-}
-
-function clearMessage(){
- messageBox.textContent = "";
- messageBox.className = "message";
-}
-
-/* التبديل بين النموذجين */
-function showForm(name){
- clearMessage();
- const isRegister = name === "register";
- registerForm.classList.toggle("active",isRegister);
- loginForm.classList.toggle("active",!isRegister);
- registerTab.classList.toggle("active",isRegister);
- loginTab.classList.toggle("active",!isRegister);
-}
-
-registerTab.addEventListener("click",()=>showForm("register"));
-loginTab.addEventListener("click",()=>showForm("login"));
-
-/* التسجيل */
-registerForm.addEventListener("submit",async function(event){
- event.preventDefault();
- clearMessage();
-
- const button = document.getElementById("registerButton");
- const countryIso = residenceCountry.value;
- const country = phoneSelector.getSelectedCountryData();
-
- const name = document.getElementById("regName").value.trim();
- const email = document.getElementById("regEmail").value.trim();
- const password = document.getElementById("regPassword").value;
- const confirm = document.getElementById("confirmPassword").value;
- const referral = document.getElementById("regReferral").value.trim();
-
- if(!countryIso){
-  showMessage("يرجى اختيار بلد الإقامة.",true);
-  return;
- }
-
- if(!phoneSelector.isValidNumber()){
-  showMessage("يرجى إدخال رقم هاتف صحيح مع اختيار مفتاح الدولة.",true);
-  return;
- }
-
- if(!name){
-  showMessage("يرجى إدخال الاسم الكامل.",true);
-  return;
- }
-
- if(password.length < 8){
-  showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.",true);
-  return;
- }
-
- if(password !== confirm){
-  showMessage("كلمتا المرور غير متطابقتين.",true);
-  return;
- }
-
- if(!document.getElementById("ageAgree").checked){
-  showMessage("يرجى تأكيد العمر والموافقة على الشروط.",true);
-  return;
- }
-
- button.disabled = true;
- button.textContent = "جارٍ إنشاء الحساب...";
-
- try{
-  const fullPhone = phoneSelector.getNumber();
-  const residenceOption = residenceCountry.options[residenceCountry.selectedIndex];
-
-  const {data,error} = await supabaseClient.auth.signUp({
-   email,
-   password,
-   options:{
-    data:{
-     full_name:name,
-     phone:fullPhone,
-     residence_country_code:countryIso.toUpperCase(),
-     residence_country_name:residenceOption.textContent,
-     phone_country_code:country.dialCode,
-     referral_code:referral || null
-    }
-   }
+/* إنشاء قائمة الإقامة */
+function loadCountries() {
+  const arabicNames = new Intl.DisplayNames(["ar"], {
+    type: "region"
   });
 
-  if(error) throw error;
+  const englishNames = new Intl.DisplayNames(["en"], {
+    type: "region"
+  });
 
-loadCountries();if(error) throw error;
+  residenceCountry.innerHTML =
+    '<option value="">اختر بلد الإقامة</option>';
 
-  if(data.session){
-   showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
-   window.location.href = "trading.html";
-  }else{
-   showMessage("تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول.");
-   showForm("login");
-   document.getElementById("loginEmail").value = email;
+  const countries = ALL_COUNTRY_CODES.map(code => ({
+    code,
+    ar: arabicNames.of(code),
+    en: englishNames.of(code)
+  }))
+  .filter(country => country.ar && country.en)
+  .sort((a, b) => a.ar.localeCompare(b.ar, "ar"));
+
+  countries.forEach(country => {
+    const option = document.createElement("option");
+    option.value = country.code;
+    option.textContent = country.ar + " — " + country.en;
+    residenceCountry.appendChild(option);
+  });
+
+  residenceCountry.value = "YE";
+
+  if (phoneSelector) {
+    phoneSelector.setCountry("ye");
+  }
+}
+
+/* بلد الإقامة لا يفرض مفتاح الهاتف إذا لم تدعمه المكتبة */
+residenceCountry.addEventListener("change", function () {
+  if (!phoneSelector || !this.value) return;
+
+  const phoneCountries = phoneSelector.getCountryData();
+  const supported = phoneCountries.some(
+    country => country.iso2.toUpperCase() === this.value
+  );
+
+  if (supported) {
+    phoneSelector.setCountry(this.value.toLowerCase());
+  }
+});
+
+/* الرسائل */
+function showMessage(message, isError = false) {
+  messageBox.textContent = message;
+  messageBox.className =
+    "message show" + (isError ? " error" : "");
+}
+
+function clearMessage() {
+  messageBox.textContent = "";
+  messageBox.className = "message";
+}
+
+/* حالة الأزرار */
+function setBusy(button, busy, text) {
+  button.disabled = busy;
+  button.textContent = text;
+}
+
+/* التبديل بين التسجيل والدخول */
+function showForm(name) {
+  clearMessage();
+
+  const isRegister = name === "register";
+
+  registerForm.classList.toggle("active", isRegister);
+  loginForm.classList.toggle("active", !isRegister);
+
+  registerTab.classList.toggle("active", isRegister);
+  loginTab.classList.toggle("active", !isRegister);
+}
+
+registerTab.addEventListener("click", () => showForm("register"));
+loginTab.addEventListener("click", () => showForm("login"));
+
+/* التسجيل */
+registerForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  clearMessage();
+
+  const button = document.getElementById("registerButton");
+
+  const countryIso = residenceCountry.value;
+  const name = document.getElementById("regName").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const confirm = document.getElementById("confirmPassword").value;
+  const referral = document.getElementById("regReferral").value.trim();
+
+  if (!countryIso) {
+    showMessage("يرجى اختيار بلد الإقامة.", true);
+    return;
   }
 
- }catch(error){
-  showMessage("تعذر إنشاء الحساب: " + error.message,true);
- }finally{
-  button.disabled = false;
-  button.textContent = "إنشاء الحساب";
- }
+  if (!phoneSelector) {
+    showMessage("أداة الهاتف لم تعمل. تحقق من اتصال الإنترنت ثم أعد تحميل الصفحة.", true);
+    return;
+  }
+
+  if (!phoneSelector.isValidNumber()) {
+    showMessage("يرجى إدخال رقم هاتف صحيح مع اختيار مفتاح الدولة.", true);
+    return;
+  }
+
+  if (!name) {
+    showMessage("يرجى إدخال الاسم الكامل.", true);
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.", true);
+    return;
+  }
+
+  if (password !== confirm) {
+    showMessage("كلمتا المرور غير متطابقتين.", true);
+    return;
+  }
+
+  if (!document.getElementById("ageAgree").checked) {
+    showMessage("يرجى تأكيد العمر والموافقة على الشروط.", true);
+    return;
+  }
+
+  const phone = phoneSelector.getNumber();
+  const phoneCountry = phoneSelector.getSelectedCountryData();
+  const countryOption =
+    residenceCountry.options[residenceCountry.selectedIndex];
+
+  setBusy(button, true, "جارٍ إنشاء الحساب...");
+
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+          phone: phone,
+          residence_country_code: countryIso,
+          residence_country_name: countryOption.textContent,
+          phone_country_code: phoneCountry.dialCode || "",
+          referral_code: referral || null
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (data.session) {
+      showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
+      window.location.href = "trading.html";
+    } else {
+      showMessage(
+        "تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول."
+      );
+
+      showForm("login");
+      document.getElementById("loginEmail").value = email;
+    }
+
+  } catch (error) {
+    console.error("Registration error:", error);
+    showMessage("تعذر إنشاء الحساب: " + error.message, true);
+
+  } finally {
+    setBusy(button, false, "إنشاء الحساب");
+  }
 });
 
 /* تسجيل الدخول */
-loginForm.addEventListener("submit",async function(event){
- event.preventDefault();
- clearMessage();
+loginForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  clearMessage();
 
- const button = document.getElementById("loginButton");
- const email = document.getElementById("loginEmail").value.trim();
- const password = document.getElementById("loginPassword").value;
+  const button = document.getElementById("loginButton");
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
- button.disabled = true;
- button.textContent = "جارٍ تسجيل الدخول...";
+  setBusy(button, true, "جارٍ تسجيل الدخول...");
 
- try{
-  const {data,error} = await supabaseClient.auth.signInWithPassword({
-   email,
-   password
-  });
+  try {
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-  if(error) throw error;
-  if(!data.session) throw new Error("تعذر إنشاء جلسة الدخول.");
+    if (error) throw error;
 
-  showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
-  window.location.href = "trading.html";
+    if (!data.session) {
+      throw new Error("تعذر إنشاء جلسة الدخول.");
+    }
 
- }catch(error){
-  showMessage("تعذر تسجيل الدخول: " + error.message,true);
- }finally{
-  button.disabled = false;
-  button.textContent = "تسجيل الدخول";
- }
+    showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
+    window.location.href = "trading.html";
+
+  } catch (error) {
+    console.error("Login error:", error);
+    showMessage("تعذر تسجيل الدخول: " + error.message, true);
+
+  } finally {
+    setBusy(button, false, "تسجيل الدخول");
+  }
 });
+
+/* تحميل الدول عند فتح الصفحة */
+loadCountries();
 </script>
 </body>
 </html>
