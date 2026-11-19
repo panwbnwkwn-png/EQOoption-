@@ -1,534 +1,944 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EQOOption — التداول</title>
+<meta charset="UTF-8"
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EQOOption | لوحة التحكم</title>
+
 <style>
-:root{--bg:#0b111b;--p:#121c2a;--p2:#172334;--line:#26364a;--muted:#91a2b7;--txt:#edf4fb;--g:#19bd8d;--g2:#20d6a0;--r:#f05268}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Tahoma,Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer;border:0}
-.top{height:64px;background:#0e1724;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:4}
-.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:bold}.logo{width:46px;height:46px;display:flex;align-items:center;justify-content:center;overflow:hidden}.logo img{width:100%;height:100%;object-fit:contain}
-.balance{background:#142b2b;border:1px solid #236653;padding:9px 13px;border-radius:9px;color:#bff8e4;font-size:13px}
-.shell{display:grid;grid-template-columns:220px minmax(0,1fr) 280px;gap:12px;padding:12px;max-width:1600px;margin:auto}
-.panel{background:var(--p);border:1px solid var(--line);border-radius:12px;overflow:hidden}.head{padding:14px;border-bottom:1px solid var(--line);font-weight:bold;display:flex;justify-content:space-between}
-.assets{padding:10px}.asset{width:100%;display:flex;justify-content:space-between;text-align:right;padding:12px 9px;border-radius:8px;background:transparent;color:var(--txt);border:1px solid transparent}
-.asset.active,.asset:hover{background:#1a2c3b;border-color:#2b5b52}.asset small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.change{color:var(--g2);font-size:12px;direction:ltr}
-.search,.control{width:calc(100% - 24px);margin:12px;background:#0c1521;border:1px solid var(--line);border-radius:8px;padding:11px;color:var(--txt)}
-.center{display:flex;flex-direction:column;gap:12px;min-width:0}.market{padding:13px 16px;display:flex;justify-content:space-between}.price{color:var(--g2);font-size:19px;font-weight:bold;direction:ltr}.muted{font-size:11px;color:var(--muted);margin-top:5px}
-.chart{height:470px;background:#0b111b}.chart iframe{width:100%;height:100%;border:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{padding:13px}.stat span{font-size:11px;color:var(--muted)}.stat b{display:block;margin-top:7px}
-.ticketbody{padding:13px}.label{display:block;font-size:12px;color:var(--muted);margin:5px 0}.ticketbody .control{width:100%;margin:0 0 13px}
-.quick{display:flex;gap:6px;margin:-6px 0 13px}.quick button{flex:1;background:#1c2b3c;color:#c5d2df;border-radius:7px;padding:7px;font-size:11px}
-.payout{padding:12px;background:#142c2a;border:1px solid #246b57;border-radius:9px;display:flex;justify-content:space-between;margin:3px 0 12px}.payout b{color:var(--g2);font-size:19px}
-.trade{width:100%;padding:14px;border-radius:9px;color:white;font-weight:bold;margin:5px 0}.up{background:linear-gradient(110deg,#119b70,#20c997)}.down{background:linear-gradient(110deg,#d9445d,#f05a6e)}
-.hint{font-size:10px;color:var(--muted);line-height:1.7;margin-top:9px}.history{grid-column:1/-1}.history table{width:100%;border-collapse:collapse;font-size:12px}.history th,.history td{padding:12px;text-align:right;border-bottom:1px solid var(--line)}.history th{color:var(--muted)}.empty{text-align:center;color:var(--muted);padding:18px}
-.notice{position:fixed;bottom:15px;left:15px;background:#172c2a;border:1px solid #277d67;padding:12px 16px;border-radius:9px;display:none}
-@media(max-width:1000px){.shell{grid-template-columns:190px minmax(0,1fr)}.ticket{grid-column:1/-1}}
-@media(max-width:680px){.top{height:57px;padding:0 10px}.brand{font-size:17px}.logo{width:36px;height:36px}.shell{display:flex;flex-direction:column;padding:8px}.chart{height:320px}.assets{display:grid;grid-template-columns:1fr 1fr}.asset{padding:9px 6px}.stats{gap:6px}.stat{padding:9px}.history{overflow:auto}.history table{min-width:500px}}
-.eqo-nav{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;background:#101b23;border-bottom:1px solid #263648;position:sticky;top:0;z-index:20}
-.eqo-nav-btn{background:#172733;color:#c8d7df;border:1px solid #304653;border-radius:9px;padding:10px 16px;cursor:pointer;font-weight:700}.eqo-nav-btn.active{background:#155c4a;border-color:#22a77c;color:#fff}
-.wallet-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 18px}.wallet-card{background:linear-gradient(145deg,#172a35,#10201f);border:1px solid #2b4b4d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.wallet-card span{color:#b8c8ce;font-size:13px}.wallet-card strong{font-size:25px;color:#e8f5ef}.wallet-card small{color:#8ea5a9;font-size:11px}
-.eqo-placeholder{margin:18px;padding:24px;min-height:180px}.eqo-placeholder p{color:var(--muted);line-height:1.8}
-@media(max-width:680px){.eqo-nav{padding:8px;gap:6px}.eqo-nav-btn{padding:9px 11px;font-size:12px;flex:1}.wallet-overview{grid-template-columns:1fr;margin:10px}.wallet-card{padding:12px}.wallet-card strong{font-size:22px}}
-.account-switch-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.account-switch-label{font-size:11px;color:#9eb2c4;white-space:nowrap}
-.account-switch{display:flex;gap:4px;padding:4px;border-radius:14px;background:#09131f;border:1px solid #2b4055;box-shadow:inset 0 1px 5px #0006}
-.account-mode-btn{min-width:126px;display:grid;grid-template-columns:9px 1fr auto;align-items:center;gap:7px;padding:8px 11px;border-radius:10px;background:transparent;color:#9fb1c3;border:1px solid transparent;font-size:12px;text-align:right;transition:.2s}
-.account-mode-btn b{font-size:12px;direction:ltr;color:#dce8f2}.account-mode-btn .mode-dot{width:8px;height:8px;border-radius:50%;background:#64748b}
-.account-mode-btn.active{background:linear-gradient(135deg,#0b795f,#16a47e);border-color:#35c49b;color:#fff;box-shadow:0 4px 15px #0da77b35}
-.account-mode-btn.active .mode-dot{background:#a7f3d0;box-shadow:0 0 9px #a7f3d0}.account-mode-btn.active b{color:#fff}
-.account-wallet-link{font-size:11px;color:#9fb1c3;padding:8px 11px;border-right:1px solid #2b4055;white-space:nowrap}.account-wallet-link b{color:#eaf4fb;direction:ltr;display:inline-block;margin-right:4px}
-@media(max-width:700px){.top{height:auto;min-height:60px;gap:8px;flex-wrap:wrap;padding:8px 10px}.top .balance{width:100%;justify-content:space-between}.account-switch-wrap{width:100%;justify-content:space-between;gap:6px}.account-switch{flex:1}.account-mode-btn{min-width:0;flex:1;padding:8px 6px;grid-template-columns:7px 1fr;gap:5px}.account-mode-btn b{grid-column:2;font-size:11px}.account-switch-label{display:none}.account-wallet-link{border-right:0;padding:6px 2px}}
+:root{
+ --bg:#0b111b;--panel:#121c2a;--panel2:#172638;
+ --line:#26364a;--text:#edf4fb;--muted:#91a2b7;
+ --green:#19bd8d;--green2:#20d6a0;--red:#f05268;
+ --gold:#e9bd65;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+[hidden]{display:none!important}
+
+.top{
+ min-height:68px;background:#0e1724;border-bottom:1px solid var(--line);
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;padding:10px 18px;position:sticky;top:0;z-index:30;flex-wrap:wrap
+}
+.brand{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:bold}
+.logo{width:43px;height:43px;display:flex;align-items:center;justify-content:center}
+.logo img{width:100%;height:100%;object-fit:contain}
+.account-switch-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.account-switch-label{font-size:11px;color:var(--muted)}
+.account-switch{display:flex;gap:4px;padding:4px;border-radius:12px;background:#09131f;border:1px solid #2b4055}
+.account-mode-btn{
+ display:flex;align-items:center;gap:7px;padding:9px 12px;
+ border-radius:9px;background:transparent;color:#a9b9c9;
+ border:1px solid transparent;font-size:12px
+}
+.account-mode-btn.active{background:#0b795f;color:white;border-color:#35c49b}
+.account-mode-btn b{direction:ltr}
+.mode-dot{width:8px;height:8px;border-radius:50%;background:#64748b}
+.active .mode-dot{background:#a7f3d0}
+.wallet-top{font-size:12px;color:var(--muted)}
+.wallet-top b{color:white;direction:ltr;display:inline-block;margin-right:5px}
+
+.eqo-nav{
+ display:flex;gap:7px;flex-wrap:wrap;padding:10px 16px;
+ background:#101b23;border-bottom:1px solid var(--line);
+ position:sticky;top:68px;z-index:20
+}
+.eqo-nav-btn{
+ background:#172733;color:#c8d7df;border:1px solid #304653;
+ border-radius:9px;padding:10px 14px;font-weight:bold
+}
+.eqo-nav-btn.active{background:#155c4a;border-color:#22a77c;color:white}
+
+.view{max-width:1600px;margin:auto;padding:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:14px;border-bottom:1px solid var(--line);font-weight:bold;display:flex;justify-content:space-between;align-items:center}
+.muted{font-size:11px;color:var(--muted)}
+.control,.search{
+ width:100%;background:#0c1521;border:1px solid var(--line);
+ border-radius:8px;padding:11px;color:var(--text);outline:none
+}
+.label{display:block;font-size:12px;color:var(--muted);margin:7px 0}
+.assets{padding:9px;display:flex;flex-direction:column;gap:5px}
+.asset{
+ width:100%;display:flex;justify-content:space-between;text-align:right;
+ padding:12px 9px;border-radius:8px;background:transparent;color:var(--text);
+ border:1px solid transparent
+}
+.asset.active,.asset:hover{background:#1a2c3b;border-color:#2b5b52}
+.asset small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.change{color:var(--green2);font-size:12px;direction:ltr}
+.trading-grid{display:grid;grid-template-columns:210px minmax(0,1fr) 260px;gap:12px}
+.center{display:flex;flex-direction:column;gap:12px;min-width:0}
+.market{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.price{color:var(--green2);font-size:20px;font-weight:bold;direction:ltr}
+.chart{height:460px;background:#0b111b}
+.chart iframe{width:100%;height:100%;border:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:13px}
+.stat span{font-size:11px;color:var(--muted)}
+.stat b{display:block;margin-top:7px}
+.ticketbody{padding:13px}
+.quick{display:flex;gap:6px;margin:8px 0 13px}
+.quick button{flex:1;background:#1c2b3c;color:#c5d2df;border-radius:7px;padding:8px;font-size:11px}
+.payout{padding:12px;background:#142c2a;border:1px solid #246b57;border-radius:9px;display:flex;justify-content:space-between;margin:10px 0}
+.payout b{color:var(--green2);font-size:19px}
+.trade{width:100%;padding:14px;border-radius:9px;color:white;font-weight:bold;margin:5px 0;border:0}
+.up{background:linear-gradient(110deg,#119b70,#20c997)}
+.down{background:linear-gradient(110deg,#d9445d,#f05a6e)}
+.hint{font-size:10px;color:var(--muted);line-height:1.8;margin-top:9px}
+.history{margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:12px;text-align:right;border-bottom:1px solid var(--line)}
+th{color:var(--muted)}
+.empty{text-align:center;color:var(--muted);padding:18px}
+
+.wallet-hero{
+ background:linear-gradient(145deg,#172a35,#10201f);
+ border:1px solid #2b4b4d;border-radius:14px;padding:22px;
+ display:grid;grid-template-columns:1.5fr 1fr;gap:20px
+}
+.wallet-kicker{color:var(--green2);font-size:11px;letter-spacing:1px}
+.wallet-hero h1{font-size:23px;margin:13px 0}
+.wallet-hero p{color:#a9bbc5;font-size:12px;line-height:1.8}
+.wallet-total-label{color:#b8c8ce;font-size:12px;margin-top:18px}
+.wallet-total{font-size:32px;font-weight:bold;margin:9px 0;direction:ltr;text-align:right}
+.wallet-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.wallet-action{background:#203341;color:white;border:1px solid #38515d;padding:11px 15px;border-radius:9px}
+.wallet-action.primary{background:#087b5d;border-color:#19bd8d}
+.wallet-side{display:grid;gap:10px}
+.wallet-mini{background:#0c1822;border:1px solid #304653;border-radius:10px;padding:15px}
+.wallet-mini span,.wallet-mini small{display:block;color:var(--muted);font-size:11px}
+.wallet-mini strong{display:block;font-size:22px;margin:10px 0;direction:ltr;text-align:right}
+.wallet-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.wallet-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.wallet-card span{color:#b8c8ce;font-size:12px}
+.wallet-card strong{display:block;font-size:23px;margin:10px 0;direction:ltr;text-align:right}
+.wallet-card small{color:var(--muted);font-size:10px}
+.wallet-management,.wallet-history,.profile-item,.verification-card{
+ background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:12px
+}
+.wallet-management-head,.wallet-history-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.wallet-management-head small,.wallet-history-head span{color:var(--muted);font-size:11px}
+.wallet-transfer-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end;margin-top:15px}
+.wallet-transfer-row .trade{margin:0}
+.eqo-placeholder{padding:22px;min-height:180px}
+.eqo-placeholder p{color:var(--muted);line-height:1.9;font-size:13px}
+.profile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.profile-item span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}
+.profile-item strong{font-size:12px;overflow-wrap:anywhere}
+.verify-field{display:block;color:var(--muted);font-size:12px;margin:14px 0}
+.verify-field input,.verify-field select{
+ display:block;width:100%;margin-top:8px;background:#0c1521;
+ border:1px solid var(--line);border-radius:8px;padding:11px;color:white
+}
+.verification-status{background:#332b19;color:#f4d48c;padding:7px 12px;border-radius:20px;font-size:11px}
+.verify-submit{width:100%;padding:13px;background:#087b5d;color:white;border:0;border-radius:9px;margin-top:10px}
+.notice{
+ position:fixed;bottom:15px;left:15px;z-index:100;
+ background:#172c2a;border:1px solid #277d67;padding:12px 16px;
+ border-radius:9px;display:none;max-width:90%;font-size:12px
+}
+.logout-btn{color:#ff9aa8}
+
+@media(max-width:1000px){
+ .trading-grid{grid-template-columns:190px minmax(0,1fr)}
+ .ticket{grid-column:1/-1}
+}
+@media(max-width:680px){
+ .top{position:relative;padding:9px}
+ .brand{font-size:17px}
+ .logo{width:35px;height:35px}
+ .account-switch-wrap{width:100%;justify-content:space-between}
+ .account-switch{flex:1}
+ .account-mode-btn{flex:1;justify-content:center;padding:8px 5px}
+ .eqo-nav{position:relative;top:auto;padding:8px;gap:5px}
+ .eqo-nav-btn{flex:1;padding:9px 5px;font-size:11px}
+ .view{padding:8px}
+ .trading-grid{display:flex;flex-direction:column}
+ .assets{display:grid;grid-template-columns:1fr 1fr}
+ .asset{padding:9px 5px;font-size:11px}
+ .chart{height:330px}
+ .stats{gap:6px}
+ .stat{padding:9px}
+ .wallet-hero{grid-template-columns:1fr;padding:15px}
+ .wallet-overview{grid-template-columns:1fr}
+ .wallet-transfer-row{grid-template-columns:1fr}
+ .profile-grid{grid-template-columns:1fr}
+ .wallet-total{font-size:27px}
+ .history{overflow:auto}
+ .history table{min-width:520px}
+}
 </style>
 </head>
+
 <body>
-<header class="top"><div class="brand"><div class="logo"><img src="logo.png" alt="EQO"></div><span>EQOOption</span></div>
-<div class="account-switch-wrap"><span class="account-switch-label">نوع الحساب</span>
-<div class="account-switch">
-<button class="account-mode-btn active" id="demoModeBtn" onclick="switchAccount('demo')"><span class="mode-dot"></span>تجريبي <b id="demoBalance">$10,000.00</b></button>
-<button class="account-mode-btn" id="realModeBtn" onclick="switchAccount('real')"><span class="mode-dot"></span>حقيقي <b id="realBalance">$0.00</b></button>
-</div>
-<div class="account-wallet-link">المحفظة <b id="walletBalance">$0.00</b></div></div></header><span id="realBalance" hidden></span>
-</div>
+
+<header class="top">
+ <div class="brand">
+  <div class="logo"><img src="logo.png" alt="EQOOption"></div>
+  <span>EQOOption</span>
+ </div>
+
+ <div class="account-switch-wrap">
+  <span class="account-switch-label">نوع الحساب</span>
+  <div class="account-switch">
+   <button class="account-mode-btn active" id="demoModeBtn" onclick="switchAccount('demo')">
+    <span class="mode-dot"></span> تجريبي <b id="demoBalance">$10,000.00</b>
+   </button>
+   <button class="account-mode-btn" id="realModeBtn" onclick="switchAccount('real')">
+    <span class="mode-dot"></span> حقيقي <b id="realBalance">$0.00</b>
+   </button>
+  </div>
+  <div class="wallet-top">المحفظة <b id="walletBalance">$0.00</b></div>
+ </div>
+</header>
 
 <nav class="eqo-nav">
-<button class="eqo-nav-btn active" data-view="trading" onclick="showView('trading')">التداول</button>
-<button class="eqo-nav-btn" data-view="wallet" onclick="showView('wallet')">المحفظة</button>
-<button class="eqo-nav-btn" data-view="profile" onclick="showView('profile')">الملف الشخصي</button>
-<button class="eqo-nav-btn" data-view="verification" onclick="showView('verification')">توثيق الحساب</button>
-<button class="eqo-nav-btn" data-view="settings" onclick="showView('settings')">الإعدادات</button>
-<button class="eqo-nav-btn" onclick="logout()">تسجيل الخروج</button>
+ <button class="eqo-nav-btn active" data-view="trading" onclick="showView('trading')">التداول</button>
+ <button class="eqo-nav-btn" data-view="wallet" onclick="showView('wallet')">المحفظة</button>
+ <button class="eqo-nav-btn" data-view="profile" onclick="showView('profile')">الملف الشخصي</button>
+ <button class="eqo-nav-btn" data-view="verification" onclick="showView('verification')">التوثيق</button>
+ <button class="eqo-nav-btn" data-view="settings" onclick="showView('settings')">الإعدادات</button>
+ <button class="eqo-nav-btn logout-btn" onclick="logoutUser()">تسجيل الخروج</button>
 </nav>
 
-<main id="tradingView">
-<div class="shell">
-<aside class="panel">
-<div class="head">الأصول المتاحة</div>
-<input class="search" id="assetSearch" placeholder="ابحث عن أصل...">
-<div class="assets" id="assetList">
-<button class="asset active" data-symbol="EUR/USD" onclick="selectAsset('EUR/USD')"><span>EUR/USD<small>اليورو / الدولار</small></span><span class="change">+0.24%</span></button>
-<button class="asset" data-symbol="GBP/USD" onclick="selectAsset('GBP/USD')"><span>GBP/USD<small>الجنيه / الدولار</small></span><span class="change">+0.18%</span></button>
-<button class="asset" data-symbol="USD/JPY" onclick="selectAsset('USD/JPY')"><span>USD/JPY<small>الدولار / الين</small></span><span class="change">-0.12%</span></button>
-<button class="asset" data-symbol="BTC/USD" onclick="selectAsset('BTC/USD')"><span>BTC/USD<small>بيتكوين / الدولار</small></span><span class="change">+0.52%</span></button>
-</div>
-</aside>
+<!-- التداول -->
+<section id="tradingView" class="view">
+ <div class="trading-grid">
 
-<main class="center">
-<section class="panel market">
-<div><strong id="selectedAsset">EUR/USD</strong><div class="muted">سعر الأصل</div></div>
-<div><div class="price" id="currentPrice">1.08500</div><div class="muted">الرسم من TradingView</div></div>
+  <aside class="panel">
+   <div class="head">الأصول المتاحة</div>
+   <div style="padding:10px">
+    <input class="search" id="assetSearch" placeholder="ابحث عن أصل..." oninput="filterAssets()">
+   </div>
+   <div class="assets" id="assetList">
+    <button class="asset active" data-symbol="EUR/USD" data-price="1.08500" data-tv="OANDA:EURUSD" onclick="selectAsset(this)">
+     <span>EUR/USD<small>اليورو / الدولار</small></span><span class="change">+0.24%</span>
+    </button>
+    <button class="asset" data-symbol="GBP/USD" data-price="1.27140" data-tv="OANDA:GBPUSD" onclick="selectAsset(this)">
+     <span>GBP/USD<small>الجنيه / الدولار</small></span><span class="change">+0.18%</span>
+    </button>
+    <button class="asset" data-symbol="USD/JPY" data-price="154.820" data-tv="OANDA:USDJPY" onclick="selectAsset(this)">
+     <span>USD/JPY<small>الدولار / الين</small></span><span class="change">-0.12%</span>
+    </button>
+    <button class="asset" data-symbol="BTC/USD" data-price="67420.50" data-tv="BITSTAMP:BTCUSD" onclick="selectAsset(this)">
+     <span>BTC/USD<small>بيتكوين / الدولار</small></span><span class="change">+0.52%</span>
+    </button>
+    <button class="asset" data-symbol="ETH/USD" data-price="3520.80" data-tv="COINBASE:ETHUSD" onclick="selectAsset(this)">
+     <span>ETH/USD<small>إيثيريوم / الدولار</small></span><span class="change">+0.63%</span>
+    </button>
+    <button class="asset" data-symbol="XAU/USD" data-price="2382.14" data-tv="OANDA:XAUUSD" onclick="selectAsset(this)">
+     <span>XAU/USD<small>الذهب / الدولار</small></span><span class="change">+0.25%</span>
+    </button>
+   </div>
+  </aside>
+
+  <main class="center">
+   <section class="panel market">
+    <div><strong id="selectedAsset">EUR/USD</strong><div class="muted">سعر الأصل</div></div>
+    <div><div class="price" id="currentPrice">1.08500</div><div class="muted">الرسم من TradingView</div></div>
+   </section>
+
+   <section class="panel chart">
+    <iframe id="chartFrame" title="TradingView"
+     src="https://www.tradingview.com/widgetembed/?symbol=OANDA%3AEURUSD&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar">
+    </iframe>
+   </section>
+
+   <section class="stats">
+    <div class="panel stat"><span>رصيد الحساب</span><b id="accountBalance">$10,000.00</b></div>
+    <div class="panel stat"><span>نوع الحساب</span><b id="accountType">تجريبي</b></div>
+    <div class="panel stat"><span>العائد المتوقع</span><b>85%</b></div>
+   </section>
+  </main>
+
+  <aside class="panel ticket">
+   <div class="head">تنفيذ الصفقة <span id="tradeModeLabel" class="muted">تجريبي</span></div>
+   <div class="ticketbody">
+    <label class="label" for="tradeAmount">مبلغ الصفقة بالدولار</label>
+    <input class="control" id="tradeAmount" type="number" min="1" step="0.01" value="10">
+
+    <div class="quick">
+     <button onclick="setAmount(10)">$10</button>
+     <button onclick="setAmount(25)">$25</button>
+     <button onclick="setAmount(50)">$50</button>
+     <button onclick="setAmount(100)">$100</button>
+    </div>
+
+    <label class="label" for="tradeDuration">مدة الصفقة</label>
+    <select class="control" id="tradeDuration">
+     <option value="30">30 ثانية</option>
+     <option value="60" selected>دقيقة واحدة</option>
+     <option value="180">3 دقائق</option>
+     <option value="300">5 دقائق</option>
+    </select>
+
+    <div class="payout"><span>نسبة العائد المحتملة</span><b>85%</b></div>
+    <button class="trade up" id="upButton" onclick="placeTrade('up')">صعود ▲</button>
+    <button class="trade down" id="downButton" onclick="placeTrade('down')">هبوط ▼</button>
+    <p class="hint" id="tradeHint">الحساب التجريبي — محاكاة فقط.</p>
+   </div>
+  </aside>
+
+ </div>
+
+ <section class="panel history">
+  <div class="head">سجل الصفقات التجريبية</div>
+  <table>
+   <thead><tr><th>الأصل</th><th>الحساب</th><th>الاتجاه</th><th>المبلغ</th><th>المدة</th><th>الحالة</th></tr></thead>
+   <tbody id="tradeHistory"><tr><td colspan="6" class="empty">لا توجد صفقات حتى الآن</td></tr></tbody>
+  </table>
+ </section>
 </section>
-<section class="panel chart"><div id="tradingview_chart" style="width:100%;height:100%"></div></section>
-<section class="stats">
-<div class="panel stat"><span>رصيد الحساب</span><b id="accountBalance">$10,000.00</b></div>
-<div class="panel stat"><span>نوع الحساب</span><b id="accountType">تجريبي</b></div>
-<div class="panel stat"><span>العائد المتوقع</span><b id="expectedReturn">85%</b></div>
-</section>
-</main>
 
-<aside class="panel ticket">
-<div class="head">تنفيذ الصفقة</div>
-<div class="ticketbody">
-<label class="label">مبلغ الصفقة بالدولار</label>
-<input class="control" id="tradeAmount" type="number" min="1" value="10">
-<div class="quick">
-<button onclick="setAmount(10)">$10</button><button onclick="setAmount(25)">$25</button><button onclick="setAmount(50)">$50</button><button onclick="setAmount(100)">$100</button>
-</div>
-<label class="label">مدة الصفقة</label>
-<select class="control" id="tradeDuration">
-<option value="30">30 ثانية</option><option value="60" selected>دقيقة واحدة</option><option value="180">3 دقائق</option><option value="300">5 دقائق</option>
-</select>
-<div class="payout"><span>نسبة العائد</span><b>85%</b></div>
-<button class="trade up" onclick="placeTrade('up')">صعود ▲</button>
-<button class="trade down" onclick="placeTrade('down')">هبوط ▼</button>
-<p class="hint" id="tradeHint">الحساب التجريبي — محاكاة.</p>
-</div>
-</aside>
-
-<section class="panel history">
-<div class="head">سجل الصفقات</div>
-<table><thead><tr><th>الأصل</th><th>نوع الحساب</th><th>الاتجاه</th><th>المبلغ</th><th>النتيجة</th></tr></thead>
-<tbody id="tradeHistory"><tr><td colspan="5" class="empty">لا توجد صفقات حتى الآن</td></tr></tbody></table>
-</section>
-</div>
-</main>
-
-<section id="walletView" class="eqo-placeholder panel" hidden>
-<h2>المحفظة</h2>
-<div class="wallet-overview">
-<div class="wallet-card"><span>رصيد المحفظة</span><strong id="walletPageBalance">$0.00</strong></div>
-<div class="wallet-card"><span>رصيد الحساب الحقيقي</span><strong id="walletPageReal">$0.00</strong></div>
-<div class="wallet-card"><span>رصيد الحساب التجريبي</span><strong id="walletPageDemo">$10,000.00</strong></div>
-</div>
-</section>
-
-<section id="profileView" class="eqo-placeholder panel" hidden>
-<h2>الملف الشخصي</h2>
-<p>البريد الإلكتروني: <strong id="profileEmail"></strong></p>
-<p>معرّف الحساب: <strong id="profileUserId"></strong></p>
-<p>تاريخ إنشاء الحساب: <strong id="profileCreated"></strong></p>
-<button class="eqo-nav-btn" onclick="showView('verification')">توثيق الحساب ورفع المستندات</button>
-</section></div><div style="text-align:left"><div class="price" id="price">1.08426</div><div class="muted">السعر الظاهر على الرسم</div></div></div>
-<div class="panel chart"><iframe id="chart" title="TradingView" src="https://www.tradingview.com/widgetembed/?symbol=OANDA%3AEURUSD&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar"></iframe></div>
-<div class="stats"><div class="panel stat"><span>الأصل</span><b id="statAsset">EUR/USD</b></div><div class="panel stat"><span>مدة العقد</span><b id="statDuration">1 دقيقة</b></div><div class="panel stat"><span>العائد المحتمل</span><b style="color:var(--g2)">85%</b></div></div></section>
-<aside class="panel"><div class="head">تنفيذ الصفقة <span style="color:#e9bd65;font-size:11px">تجريبي</span></div><div class="ticketbody">
-<label class="label">مبلغ الاستثمار (USD)</label><input class="control" id="amount" type="number" min="1" value="100">
-<div class="quick"><button onclick="setAmount(50)">$50</button><button onclick="setAmount(100)">$100</button><button onclick="setAmount(250)">$250</button><button onclick="setAmount(500)">$500</button></div>
-<label class="label">مدة العقد</label><select class="control" id="duration" onchange="document.getElementById('statDuration').textContent=this.value"><option>30 ثانية</option><option selected>1 دقيقة</option><option>2 دقيقة</option><option>5 دقائق</option><option>15 دقيقة</option></select>
-<div class="payout"><span><small class="muted">العائد المحتمل</small><br><b>85%</b></span><span><small class="muted">الربح المحتمل</small><br><b id="profit">$85.00</b></span></div>
-<button class="trade up" onclick="demoTrade('صعود')">↑　صعود</button><button class="trade down" onclick="demoTrade('هبوط')">↓　هبوط</button>
-<div class="hint">نسخة واجهة تجريبية فقط: لا ترسل أوامر إلى وسيط ولا تخصم أموالاً حقيقية. الأسعار المكتوبة في قائمة الأصول توضيحية، والرسم من TradingView.</div></div></aside>
-<section class="panel history"><div class="head">الصفقات الأخيرة <span class="muted">سجل تجريبي محلي</span></div><table><thead><tr><th>الأصل</th><th>الاتجاه</th><th>المبلغ</th><th>المدة</th><th>الحالة</th></tr></thead><tbody id="history"><tr><td colspan="5" class="empty">لا توجد صفقات بعد</td></tr></tbody></table></section>
-</main>
-</section><div class="notice" id="notice"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL='https://jowczhvatafpedxmhuuq.supabase.co';
-const SUPABASE_KEY='sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let balance=10000;
-let realBalance=0;
-let accountMode='demo';
-function msg(t){let n=document.getElementById('notice');n.textContent=t;n.style.display='block';setTimeout(()=>n.style.display='none',3000)}
-function money(v){return '$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-let currentUser=null;
-function showView(view){
- ['wallet','deposit','withdraw','transfer','trading','profile','settings'].forEach(v=>{const el=document.getElementById(v+'View');if(el)el.hidden=(v!==view)});
- document.querySelectorAll('.eqo-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- if(view==='wallet'||view==='transfer') window.scrollTo({top:0,behavior:'smooth'});
-}
-async function loadAccount(){
- const {data:{session},error:authError}=await sb.auth.getSession();
- if(authError||!session){location.replace('/index.html');return}
- currentUser=session.user;document.getElementById('accountEmail').textContent=session.user.email||'حساب مسجل';
- const profileEmail=document.getElementById('profileEmail');if(profileEmail)profileEmail.textContent=session.user.email||'غير متاح';
- const profileId=document.getElementById('profileUserId');if(profileId)profileId.textContent=session.user.id||'—';
- const profileCreated=document.getElementById('profileCreatedAt');if(profileCreated)profileCreated.textContent=session.user.created_at?new Date(session.user.created_at).toLocaleString('ar'): '—';
- const {data,error}=await sb.from('wallets').select('balance,real_balance,demo_balance').eq('user_id',currentUser.id).single();
- if(error){msg('تعذر تحميل المحفظة: '+error.message);return}
- document.getElementById('walletBalance').textContent=money(data.balance);
- document.getElementById('realBalance').textContent=money(data.real_balance);
- document.getElementById('walletCardBalance').textContent=money(data.balance);document.getElementById('walletCardBalanceMirror').textContent=money(data.balance);
- document.getElementById('realCardBalance').textContent=money(data.real_balance);document.getElementById('realCardBalanceMirror').textContent=money(data.real_balance);
- document.getElementById('demoCardBalance').textContent=money(data.demo_balance??10000);document.getElementById('demoCardBalanceMirror').textContent=money(data.demo_balance??10000);
- realBalance=Number(data.real_balance||0);
- balance=Number(data.demo_balance??10000);document.getElementById('balance').textContent=money(balance);
- renderAccountBalances();
- await loadWalletHistory();
-}
-function renderAccountBalances(){
- const demo=money(balance), real=money(realBalance);
- const demoTop=document.getElementById('demoTopBalance');
- const realTop=document.getElementById('realTopBalance');
- if(demoTop) demoTop.textContent=demo;
- if(realTop) realTop.textContent=real;
- const activeBalance=document.querySelector('.top .balance');
- if(activeBalance) activeBalance.setAttribute('aria-label',accountMode==='demo'?'رصيد الحساب التجريبي '+demo:'رصيد الحساب الحقيقي '+real);
-}
-function setAccountMode(mode){
-  const select=document.getElementById('accountMode');
-  if(select) select.value=mode;
-  switchAccountMode();
-}
-function switchAccountMode(){
-  const select=document.getElementById('accountMode');
-  accountMode=select?.value==='real'?'real':'demo';
-  document.getElementById('demoModeBtn')?.classList.toggle('active',accountMode==='demo');
-  document.getElementById('realModeBtn')?.classList.toggle('active',accountMode==='real');
-  const title=document.querySelector('.ticketbody')?.parentElement?.querySelector('.head');
-  if(title) title.innerHTML=accountMode==='demo'?'التداول <span style="color:#e9bd65;font-size:11px">حساب تجريبي</span>':'التداول <span style="color:#f0b45b;font-size:11px">حساب حقيقي — عرض فقط</span>';
-  const hint=document.querySelector('.ticketbody .hint');
-  if(hint) hint.textContent=accountMode==='demo'?'أنت الآن في الحساب التجريبي. الصفقات تدريبية وتُخصم من الرصيد التجريبي فقط.':'أنت الآن في الحساب الحقيقي. سيظهر رصيدك الحقيقي، لكن تنفيذ الصفقات يظل معطلاً حتى ربط وسيط التداول والتحقق من الخادم.';
-  const balanceLabel=document.querySelector('.top .balance');
-  if(balanceLabel) balanceLabel.setAttribute('data-active-account',accountMode);
-  renderAccountBalances();
-  const tradeButtons=document.querySelectorAll('.ticketbody .trade');
-  tradeButtons.forEach(button=>{button.disabled=accountMode==='real';button.style.opacity=accountMode==='real'?'.55':'1';button.title=accountMode==='real'?'التداول الحقيقي غير متاح قبل ربط وسيط التداول':'تنفيذ صفقة تجريبية'});
-  const tradeHead=document.querySelector('aside.panel .head');
-  if(tradeHead) tradeHead.innerHTML=accountMode==='demo'?'تنفيذ الصفقة <span style="color:#e9bd65;font-size:11px">تجريبي</span>':'تنفيذ الصفقة <span style="color:#f0b45b;font-size:11px">حقيقي · غير مفعّل</span>';
-  msg(accountMode==='demo'?'تم التبديل إلى الحساب التجريبي':'تم التبديل إلى الحساب الحقيقي — التنفيذ غير متاح حالياً');
-}
-
-async function transfer(fn){
- const amount=Number(document.getElementById('transferAmount').value);
- if(!Number.isFinite(amount)||amount<=0){msg('أدخل مبلغاً صحيحاً');return}
- const {error}=await sb.rpc(fn,{p_amount:amount});
- if(error){msg('لم ينجح التحويل: '+error.message);return}
- msg('تم التحويل بنجاح');await loadAccount();
-}
-async function loadWalletHistory(){
- const box=document.getElementById('walletHistory');
- const {data,error}=await sb.from('wallet_transactions').select('transaction_type,amount,currency,status,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(10);
- if(error){box.textContent='تعذر تحميل سجل التحويلات.';return}
- if(!data.length){box.textContent='لا توجد تحويلات بعد.';return}
- box.innerHTML=data.map(x=>`<div style="padding:6px 0;border-bottom:1px solid #263648">${x.transaction_type==='wallet_to_real'?'المحفظة ← الحقيقي':'الحقيقي ← المحفظة'} · ${money(x.amount)} · ${new Date(x.created_at).toLocaleString('ar')}</div>`).join('');
-}
-function setAmount(v){document.getElementById('amount').value=v;profit()}
-function profit(){let a=Number(document.getElementById('amount').value)||0;document.getElementById('profit').textContent=money(a*.85)}
-document.getElementById('amount').addEventListener('input',profit);
-function selectAsset(b,s,p,t){document.querySelectorAll('.asset').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('symbol').textContent=s;document.getElementById('price').textContent=p;document.getElementById('statAsset').textContent=s;document.getElementById('chart').src='https://www.tradingview.com/widgetembed/?symbol='+encodeURIComponent(t)+'&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar'}
-function filterAssets(){let q=document.getElementById('filter').value.toLowerCase();document.querySelectorAll('.asset').forEach(a=>a.style.display=a.innerText.toLowerCase().includes(q)?'flex':'none')}
-async function demoTrade(d){
- if(accountMode!=='demo'){msg('التداول الحقيقي غير مفعّل حالياً حتى ربط وسيط التداول.');return}
- const amount=Number(document.getElementById('amount').value);
- if(!Number.isFinite(amount)||amount<=0){msg('أدخل مبلغاً صحيحاً');return}
- if(!currentUser){msg('يرجى تسجيل الدخول أولاً');return}
- const duration=document.getElementById('duration').value;
- const {data,error}=await sb.rpc('reserve_demo_trade',{p_amount:amount});
- if(error){msg('تعذر تنفيذ الحجز التجريبي: '+error.message);return}
- balance=Number(data);
- const balanceEl=document.getElementById('balance');if(balanceEl)balanceEl.textContent=money(balance);
- renderAccountBalances();
- const body=document.getElementById('history');
- if(body.querySelector('.empty'))body.innerHTML='';
- const row=body.insertRow(0);
- [document.getElementById('statAsset').textContent,d,money(amount),duration,'تجريبية — محاكاة'].forEach((value,index)=>{
-  const cell=row.insertCell();cell.textContent=value;
-  if(index===1)cell.style.color=d==='صعود'?'var(--g2)':'var(--r)';
- });
- msg('تم حجز مبلغ الصفقة التجريبية من رصيدك. نتيجة الصفقة ما زالت محاكاة.');
-}
-async function logoutUser(){
- const button=document.querySelector('.logout-btn');if(button)button.disabled=true;
- const {error}=await sb.auth.signOut();
- if(error){if(button)button.disabled=false;msg('تعذر تسجيل الخروج: '+error.message);return}
- location.replace('/index.html');
-}
-
-function toggleVerificationForm(){
- const form=document.getElementById('verificationForm');
- form.hidden=!form.hidden;
-}
-async function submitVerification(event){
- event.preventDefault();
- if(!currentUser){msg('يرجى تسجيل الدخول أولاً');return}
- const type=document.getElementById('documentType').value;
- const front=document.getElementById('documentFront').files[0];
- const back=document.getElementById('documentBack').files[0];
- const selfie=document.getElementById('selfieFile').files[0];
- if(!type||!front){msg('اختر نوع الوثيقة وارفع صورتها الأمامية');return}
- const files=[front,back,selfie].filter(Boolean);
- const allowed=['image/jpeg','image/png','application/pdf'];
- for(const file of files){
-  if(file.size>5*1024*1024){msg('حجم كل ملف يجب ألا يتجاوز 5 ميغابايت');return}
-  if(!allowed.includes(file.type)){msg('نوع ملف غير مدعوم؛ استخدم JPG أو PNG أو PDF');return}
- }
- const button=document.getElementById('verificationSubmit');button.disabled=true;button.textContent='جارٍ رفع المستندات...';
- const uploaded=[];
- try{
-  const base=currentUser.id+'/'+Date.now();</style>
-<nav class="eqo-nav" aria-label="القائمة الرئيسية">
-<button class="eqo-nav-btn active" data-view="wallet" onclick="showView('wallet')">◈ <span>المحفظة</span></button>
-<button class="eqo-nav-btn" data-view="deposit" onclick="showView('deposit')">＋ <span>إيداع</span></button>
-<button class="eqo-nav-btn" data-view="withdraw" onclick="showView('withdraw')">↧ <span>سحب</span></button>
-<button class="eqo-nav-btn" data-view="transfer" onclick="showView('transfer')">⇄ <span>تحويل</span></button>
-<button class="eqo-nav-btn" data-view="trading" onclick="showView('trading')">▥ <span>التداول</span></button>
-<button class="eqo-nav-btn" data-view="profile" onclick="showView('profile')">♙ <span>الملف الشخصي</span></button>
-<button class="eqo-nav-btn" data-view="settings" onclick="showView('settings')">⚙ <span>الإعدادات</span></button>
-<button class="eqo-nav-btn logout-btn" type="button" onclick="logoutUser()">⇥ <span>تسجيل الخروج</span></button>
-</nav>
-<section id="walletView" class="eqo-view eqo-view-wallet">
+<!-- المحفظة -->
+<section id="walletView" class="view" hidden>
  <div class="wallet-hero">
   <div>
-   <div class="wallet-kicker"><i></i> EQOOPTION WALLET</div>
+   <div class="wallet-kicker">EQOOPTION WALLET</div>
    <h1>محفظتك، أموالك في مكان واحد</h1>
-   <p>تابع رصيدك وأدر التحويلات بين المحفظة وحساب التداول الحقيقي بكل وضوح.</p>
+   <p>تابع رصيدك وأدر التحويلات بين المحفظة وحساب التداول الحقيقي.</p>
    <div class="wallet-total-label">الرصيد المتاح في المحفظة</div>
-   <div class="wallet-total" id="walletCardBalance">$0.00</div>
-   <div class="wallet-actions"><button class="wallet-action primary" onclick="showView('deposit')">＋　إيداع أموال</button><button class="wallet-action" onclick="showView('withdraw')">↧　طلب سحب</button><button class="wallet-action" onclick="showView('transfer')">⇄　تحويل رصيد</button></div>
+   <div class="wallet-total" id="walletPageBalance">$0.00</div>
+   <div class="wallet-actions">
+    <button class="wallet-action primary" onclick="showView('deposit')">＋ إيداع أموال</button>
+    <button class="wallet-action" onclick="showView('withdraw')">طلب سحب</button>
+    <button class="wallet-action" onclick="document.getElementById('transferAmount').focus()">تحويل رصيد</button>
+   </div>
   </div>
   <div class="wallet-side">
-   <div class="wallet-mini"><span>حساب التداول الحقيقي</span><strong id="realCardBalance">$0.00</strong><small>رصيد منفصل عن المحفظة</small></div>
-   <div class="wallet-mini"><span>الحساب التجريبي</span><strong id="demoCardBalance">$10,000.00</strong><small>للتدريب فقط · لا يمكن تحويله</small></div>
+   <div class="wallet-mini"><span>حساب التداول الحقيقي</span><strong id="walletPageReal">$0.00</strong><small>رصيد منفصل عن المحفظة</small></div>
+   <div class="wallet-mini"><span>الحساب التجريبي</span><strong id="walletPageDemo">$10,000.00</strong><small>للتدريب فقط — لا يمكن تحويله</small></div>
   </div>
  </div>
- <div class="wallet-section-title"><div><h2>ملخص الأرصدة</h2><p>نظرة سريعة على حساباتك</p></div><span class="muted" id="accountEmail">جارٍ التحقق من الحساب...</span></div>
+
  <div class="wallet-overview">
-  <div class="wallet-card"><span>رصيد المحفظة</span><strong id="walletCardBalanceMirror">$0.00</strong><small>الرصيد الأساسي بالدولار الأمريكي</small></div>
-  <div class="wallet-card"><span>رصيد التداول الحقيقي</span><strong id="realCardBalanceMirror">$0.00</strong><small>التداول الحقيقي غير مفعّل حالياً</small></div>
-  <div class="wallet-card"><span>الرصيد التجريبي</span><strong id="demoCardBalanceMirror">$10,000.00</strong><small>رصيد افتراضي مستقل للتجربة</small></div>
+  <div class="wallet-card"><span>رصيد المحفظة</span><strong id="walletCardBalance">$0.00</strong><small>الرصيد الأساسي بالدولار</small></div>
+  <div class="wallet-card"><span>رصيد التداول الحقيقي</span><strong id="realCardBalance">$0.00</strong><small>التداول الحقيقي غير مفعّل</small></div>
+  <div class="wallet-card"><span>الرصيد التجريبي</span><strong id="demoCardBalance">$10,000.00</strong><small>رصيد افتراضي منفصل</small></div>
  </div>
+
  <div class="wallet-management">
-  <div class="wallet-management-head"><b>تحويل بين المحفظة وحساب التداول</b><small>التحويل متاح بين الرصيدين الحقيقيين فقط</small></div>
-  <div class="wallet-transfer-row">
-   <label class="label">مبلغ التحويل بالدولار<input class="control" id="transferAmount" type="number" min="0.01" step="0.01" value="10" placeholder="أدخل المبلغ"></label>
-   <button class="trade up" onclick="transfer('transfer_wallet_to_real')">المحفظة ← الحساب الحقيقي</button>
-   <button class="trade down" onclick="transfer('transfer_real_to_wallet')">الحساب الحقيقي ← المحفظة</button>
+  <div class="wallet-management-head">
+   <b>تحويل بين المحفظة وحساب التداول</b>
+   <small>للأرصدة الحقيقية فقط</small>
   </div>
-  <div class="hint">رصيد الحساب التجريبي منفصل تماماً، ولا يمكن تحويله إلى المحفظة أو الحساب الحقيقي.</div>
+  <div class="wallet-transfer-row">
+   <label class="label">مبلغ التحويل بالدولار
+    <input class="control" id="transferAmount" type="number" min="0.01" step="0.01" value="10">
+   </label>
+   <button class="trade up" onclick="transferFunds('transfer_wallet_to_real')">المحفظة ← الحقيقي</button>
+   <button class="trade down" onclick="transferFunds('transfer_real_to_wallet')">الحقيقي ← المحفظة</button>
+  </div>
+  <p class="hint">رصيد الحساب التجريبي منفصل تماماً، ولا يمكن تحويله إلى المحفظة أو الحساب الحقيقي.</p>
  </div>
- <div class="wallet-history"><div class="wallet-history-head"><b>سجل عمليات التحويل</b><span>آخر 10 عمليات</span></div><div id="walletHistory">جارٍ تحميل السجل...</div></div>
+
+ <div class="wallet-history">
+  <div class="wallet-history-head"><b>سجل عمليات التحويل</b><span>آخر 10 عمليات</span></div>
+  <div id="walletHistory" class="hint">جارٍ تحميل السجل...</div>
+ </div>
 </section>
-<section id="depositView" class="eqo-view eqo-placeholder" hidden><h2>إيداع الأموال</h2><p>ستظهر هنا طرق الإيداع وسجل طلباتك بعد ربط مزود دفع مرخص وإعداد التحقق الآمن من العمليات.</p><button class="trade up" disabled>الإيداع غير متاح حالياً</button></section>
-<section id="withdrawView" class="eqo-view eqo-placeholder" hidden><h2>سحب الأموال</h2><p>ستتمكن من تقديم طلب سحب ومتابعة حالته بعد ربط مزود دفع مرخص واستكمال إجراءات التحقق.</p><button class="trade down" disabled>السحب غير متاح حالياً</button></section>
-<section id="transferView" class="eqo-view" hidden><div class="eqo-placeholder"><h2>تحويل الأموال</h2><p>حوّل بين المحفظة وحساب التداول الحقيقي. لا يسمح النظام بتحويل الرصيد التجريبي.</p><button class="trade up" onclick="showView('wallet')">العودة إلى المحفظة</button></div></section>
-<section id="profileView" class="eqo-view eqo-placeholder" hidden>
- <h2>الملف الشخصي</h2><p>بيانات حسابك المسجل في EQOOption.</p>
- <div class="profile-grid"><div class="profile-item"><span>البريد الإلكتروني</span><strong id="profileEmail">جارٍ التحميل...</strong></div><div class="profile-item"><span>معرّف المستخدم</span><strong id="profileUserId">—</strong></div><div class="profile-item"><span>تاريخ إنشاء الحساب</span><strong id="profileCreatedAt">—</strong></div></div>
- <div class="verification-card">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h3 style="margin:0 0 8px">توثيق الحساب</h3><p style="margin:0;color:#9eb1c3;font-size:12px;line-height:1.8">وثّق هويتك لإكمال متطلبات التحقق قبل إتاحة الخدمات المالية.</p></div><span class="verification-status" id="verificationStatus">غير موثّق</span></div>
-  <div class="verification-actions"><button class="wallet-action primary" type="button" onclick="toggleVerificationForm()">رفع مستندات التوثيق</button></div>
+
+<!-- الإيداع -->
+<section id="depositView" class="view" hidden>
+ <div class="panel eqo-placeholder">
+  <h2>إيداع الأموال</h2>
+  <p>ستظهر هنا طرق الإيداع بعد ربط مزود دفع مرخص وإعداد التحقق الآمن من العمليات.</p>
+  <button class="trade up" disabled>الإيداع غير متاح حالياً</button>
+ </div>
+</section>
+
+<!-- السحب -->
+<section id="withdrawView" class="view" hidden>
+ <div class="panel eqo-placeholder">
+  <h2>سحب الأموال</h2>
+  <p>ستتمكن من تقديم طلب سحب ومتابعة حالته بعد ربط مزود دفع مرخص واستكمال إجراءات التحقق.</p>
+  <button class="trade down" disabled>السحب غير متاح حالياً</button>
+ </div>
+</section>
+
+<!-- الملف الشخصي -->
+<section id="profileView" class="view" hidden>
+ <div class="panel eqo-placeholder">
+  <h2>الملف الشخصي</h2>
+  <p>بيانات حسابك المسجل في EQOOption.</p>
+  <div class="profile-grid">
+   <div class="profile-item"><span>البريد الإلكتروني</span><strong id="profileEmail">جارٍ التحميل...</strong></div>
+   <div class="profile-item"><span>معرّف المستخدم</span><strong id="profileUserId">—</strong></div>
+   <div class="profile-item"><span>تاريخ إنشاء الحساب</span><strong id="profileCreated">—</strong></div>
+  </div>
+  <button class="wallet-action primary" style="margin-top:15px" onclick="showView('verification')">توثيق الحساب</button>
+ </div>
+</section>
+
+<!-- التوثيق -->
+<section id="verificationView" class="view" hidden>
+ <div class="panel eqo-placeholder">
+  <h2>توثيق الحساب</h2>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+   <p>ارفع مستنداتك لمراجعتها يدوياً.</p>
+   <span class="verification-status" id="verificationStatus">غير موثّق</span>
+  </div>
+  <button class="wallet-action primary" type="button" onclick="toggleVerificationForm()">رفع مستندات التوثيق</button>
+
   <form id="verificationForm" hidden onsubmit="submitVerification(event)">
-   <label class="verify-field">نوع الوثيقة<select id="documentType" required><option value="">اختر نوع الوثيقة</option><option value="national_id">بطاقة الهوية الوطنية</option><option value="passport">جواز السفر</option><option value="residence_permit">إقامة</option></select></label>
-   <label class="verify-field">صورة الوجه الأمامي للوثيقة<input id="documentFront" type="file" accept="image/jpeg,image/png,application/pdf" required></label>
-   <label class="verify-field">صورة الوجه الخلفي للوثيقة (إن وجدت)<input id="documentBack" type="file" accept="image/jpeg,image/png,application/pdf"></label>
-   <label class="verify-field">صورة شخصية واضحة (اختياري)<input id="selfieFile" type="file" accept="image/jpeg,image/png"></label>
+   <label class="verify-field">نوع الوثيقة
+    <select id="documentType" required>
+     <option value="">اختر نوع الوثيقة</option>
+     <option value="national_id">بطاقة الهوية الوطنية</option>
+     <option value="passport">جواز السفر</option>
+     <option value="residence_permit">إقامة</option>
+    </select>
+   </label>
+   <label class="verify-field">صورة الوجه الأمامي
+    <input id="documentFront" type="file" accept="image/jpeg,image/png,application/pdf" required>
+   </label>
+   <label class="verify-field">صورة الوجه الخلفي (اختياري)
+    <input id="documentBack" type="file" accept="image/jpeg,image/png,application/pdf">
+   </label>
+   <label class="verify-field">صورة شخصية (اختياري)
+    <input id="selfieFile" type="file" accept="image/jpeg,image/png">
+   </label>
    <button class="verify-submit" id="verificationSubmit" type="submit">إرسال طلب التوثيق</button>
-   <p class="verification-note">تُرفع المستندات إلى مساحة تخزين خاصة، ولا تظهر للزوار. لا ترفع مستنداتك إلا إذا كنت تثق بالجهة المشغّلة للمنصة. الحد الأقصى 5 ميغابايت لكل ملف. إرسال الطلب لا يعني الموافقة التلقائية؛ تتم مراجعته يدوياً.</p>
+   <p class="hint">الحد الأقصى 5 ميغابايت لكل ملف. إرسال الطلب لا يعني الموافقة التلقائية؛ تتم مراجعته يدوياً.</p>
   </form>
  </div>
 </section>
-<section id="settingsView" class="eqo-view eqo-placeholder" hidden>
- <h2>الإعدادات</h2><p>إعدادات عرض الواجهة. التغييرات هنا محلية على هذا الجهاز.</p>
- <label class="label" for="languageSetting">لغة الواجهة</label><select class="control" id="languageSetting" onchange="saveDisplaySetting()"><option value="ar">العربية</option><option value="en">English (واجهة الترجمة قيد التجهيز)</option></select>
- <div class="hint">إعدادات الأمان وكلمة المرور تُدار من نظام الحساب، ولا نطلب منك إدخال كلمة المرور داخل هذه الصفحة.</div>
-</section> <section id="tradingView" class="eqo-view" hidden>
-<main class="shell">
-<aside class="panel"><div class="head">الأسواق <span style="color:var(--g2);font-size:11px">● تجريبي</span></div><input class="search" id="filter" placeholder="ابحث عن أصل..." oninput="filterAssets()"><div class="assets" id="assets">
-<button class="asset active" onclick="selectAsset(this,'EUR/USD','1.08426','OANDA:EURUSD')"><span><b>EUR/USD</b><small>اليورو / الدولار</small></span><span class="change">+0.18%</span></button>
-<button class="asset" onclick="selectAsset(this,'GBP/USD','1.27140','OANDA:GBPUSD')"><span><b>GBP/USD</b><small>الجنيه / الدولار</small></span><span class="change">+0.11%</span></button>
-<button class="asset" onclick="selectAsset(this,'USD/JPY','154.820','OANDA:USDJPY')"><span><b>USD/JPY</b><small>الدولار / الين</small></span><span class="change">−0.08%</span></button>
-<button class="asset" onclick="selectAsset(this,'BTC/USD','67420.50','BITSTAMP:BTCUSD')"><span><b>BTC/USD</b><small>بيتكوين / الدولار</small></span><span class="change">−0.42%</span></button>
-<button class="asset" onclick="selectAsset(this,'ETH/USD','3520.80','COINBASE:ETHUSD')"><span><b>ETH/USD</b><small>إيثيريوم / الدولار</small></span><span class="change">+0.63%</span></button>
-<button class="asset" onclick="selectAsset(this,'XAU/USD','2382.14','OANDA:XAUUSD')"><span><b>XAU/USD</b><small>الذهب / الدولار</small></span><span class="change">+0.25%</span></button></div></aside>
-<section class="center">
-<div class="panel market"><div><b id="symbol">EUR/USD</b><div class="muted">الفوركس · الرسم من TradingView</div></div><div style="text-align:left"><div class="price" id="price">1.08426</div><div class="muted">السعر الظاهر على الرسم</div></div></div>
-<div class="panel chart"><iframe id="chart" title="TradingView" src="https://www.tradingview.com/widgetembed/?symbol=OANDA%3AEURUSD&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar"></iframe></div>
-<div class="stats"><div class="panel stat"><span>الأصل</span><b id="statAsset">EUR/USD</b></div><div class="panel stat"><span>مدة العقد</span><b id="statDuration">1 دقيقة</b></div><div class="panel stat"><span>العائد المحتمل</span><b style="color:var(--g2)">85%</b></div></div></section>
-<aside class="panel"><div class="head">تنفيذ الصفقة <span style="color:#e9bd65;font-size:11px">تجريبي</span></div><div class="ticketbody">
-<label class="label">مبلغ الاستثمار (USD)</label><input class="control" id="amount" type="number" min="1" value="100">
-<div class="quick"><button onclick="setAmount(50)">$50</button><button onclick="setAmount(100)">$100</button><button onclick="setAmount(250)">$250</button><button onclick="setAmount(500)">$500</button></div>
-<label class="label">مدة العقد</label><select class="control" id="duration" onchange="document.getElementById('statDuration').textContent=this.value"><option>30 ثانية</option><option selected>1 دقيقة</option><option>2 دقيقة</option><option>5 دقائق</option><option>15 دقيقة</option></select>
-<div class="payout"><span><small class="muted">العائد المحتمل</small><br><b>85%</b></span><span><small class="muted">الربح المحتمل</small><br><b id="profit">$85.00</b></span></div>
-<button class="trade up" onclick="demoTrade('صعود')">↑　صعود</button><button class="trade down" onclick="demoTrade('هبوط')">↓　هبوط</button>
-<div class="hint">نسخة واجهة تجريبية فقط: لا ترسل أوامر إلى وسيط ولا تخصم أموالاً حقيقية. الأسعار المكتوبة في قائمة الأصول توضيحية، والرسم من TradingView.</div></div></aside>
-<section class="panel history"><div class="head">الصفقات الأخيرة <span class="muted">سجل تجريبي محلي</span></div><table><thead><tr><th>الأصل</th><th>الاتجاه</th><th>المبلغ</th><th>المدة</th><th>الحالة</th></tr></thead><tbody id="history"><tr><td colspan="5" class="empty">لا توجد صفقات بعد</td></tr></tbody></table></section>
-</main>
-</section><div class="notice" id="notice"></div>
+
+<!-- الإعدادات -->
+<section id="settingsView" class="view" hidden>
+ <div class="panel eqo-placeholder">
+  <h2>الإعدادات</h2>
+  <p>إعدادات عرض الواجهة على هذا الجهاز.</p>
+  <label class="label" for="languageSetting">لغة الواجهة</label>
+  <select class="control" id="languageSetting" onchange="saveDisplaySetting()">
+   <option value="ar">العربية</option>
+   <option value="en">English — الترجمة قيد التجهيز</option>
+  </select>
+  <p class="hint">إعدادات الأمان وكلمة المرور تُدار من نظام الحساب.</p>
+ </div>
+</section>
+
+<div class="notice" id="notice" role="status"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL='https://jowczhvatafpedxmhuuq.supabase.co';
-const SUPABASE_KEY='sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let balance=10000;
-let realBalance=0;
-let accountMode='demo';
-function msg(t){let n=document.getElementById('notice');n.textContent=t;n.style.display='block';setTimeout(()=>n.style.display='none',3000)}
-function money(v){return '$'+Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-let currentUser=null;
-function showView(view){
- ['wallet','deposit','withdraw','transfer','trading','profile','settings'].forEach(v=>{const el=document.getElementById(v+'View');if(el)el.hidden=(v!==view)});
- document.querySelectorAll('.eqo-nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
- if(view==='wallet'||view==='transfer') window.scrollTo({top:0,behavior:'smooth'});
-}
-async function loadAccount(){
- const {data:{session},error:authError}=await sb.auth.getSession();
- if(authError||!session){location.replace('/index.html');return}
- currentUser=session.user;document.getElementById('accountEmail').textContent=session.user.email||'حساب مسجل';
- const profileEmail=document.getElementById('profileEmail');if(profileEmail)profileEmail.textContent=session.user.email||'غير متاح';
- const profileId=document.getElementById('profileUserId');if(profileId)profileId.textContent=session.user.id||'—';
- const profileCreated=document.getElementById('profileCreatedAt');if(profileCreated)profileCreated.textContent=session.user.created_at?new Date(session.user.created_at).toLocaleString('ar'): '—';
- const {data,error}=await sb.from('wallets').select('balance,real_balance,demo_balance').eq('user_id',currentUser.id).single();
- if(error){msg('تعذر تحميل المحفظة: '+error.message);return}
- document.getElementById('walletBalance').textContent=money(data.balance);
- document.getElementById('realBalance').textContent=money(data.real_balance);
- document.getElementById('walletCardBalance').textContent=money(data.balance);document.getElementById('walletCardBalanceMirror').textContent=money(data.balance);
- document.getElementById('realCardBalance').textContent=money(data.real_balance);document.getElementById('realCardBalanceMirror').textContent=money(data.real_balance);
- document.getElementById('demoCardBalance').textContent=money(data.demo_balance??10000);document.getElementById('demoCardBalanceMirror').textContent=money(data.demo_balance??10000);
- realBalance=Number(data.real_balance||0);
- balance=Number(data.demo_balance??10000);document.getElementById('balance').textContent=money(balance);
- renderAccountBalances();
- await loadWalletHistory();
-}
-function renderAccountBalances(){
- const demo=money(balance), real=money(realBalance);
- const demoTop=document.getElementById('demoTopBalance');
- const realTop=document.getElementById('realTopBalance');
- if(demoTop) demoTop.textContent=demo;
- if(realTop) realTop.textContent=real;
- const activeBalance=document.querySelector('.top .balance');
- if(activeBalance) activeBalance.setAttribute('aria-label',accountMode==='demo'?'رصيد الحساب التجريبي '+demo:'رصيد الحساب الحقيقي '+real);
-}
-function setAccountMode(mode){
-  const select=document.getElementById('accountMode');
-  if(select) select.value=mode;
-  switchAccountMode();
-}
-function switchAccountMode(){
-  const select=document.getElementById('accountMode');
-  accountMode=select?.value==='real'?'real':'demo';
-  document.getElementById('demoModeBtn')?.classList.toggle('active',accountMode==='demo');
-  document.getElementById('realModeBtn')?.classList.toggle('active',accountMode==='real');
-  const title=document.querySelector('.ticketbody')?.parentElement?.querySelector('.head');
-  if(title) title.innerHTML=accountMode==='demo'?'التداول <span style="color:#e9bd65;font-size:11px">حساب تجريبي</span>':'التداول <span style="color:#f0b45b;font-size:11px">حساب حقيقي — عرض فقط</span>';
-  const hint=document.querySelector('.ticketbody .hint');
-  if(hint) hint.textContent=accountMode==='demo'?'أنت الآن في الحساب التجريبي. الصفقات تدريبية وتُخصم من الرصيد التجريبي فقط.':'أنت الآن في الحساب الحقيقي. سيظهر رصيدك الحقيقي، لكن تنفيذ الصفقات يظل معطلاً حتى ربط وسيط التداول والتحقق من الخادم.';
-  const balanceLabel=document.querySelector('.top .balance');
-  if(balanceLabel) balanceLabel.setAttribute('data-active-account',accountMode);
-  renderAccountBalances();
-  const tradeButtons=document.querySelectorAll('.ticketbody .trade');
-  tradeButtons.forEach(button=>{button.disabled=accountMode==='real';button.style.opacity=accountMode==='real'?'.55':'1';button.title=accountMode==='real'?'التداول الحقيقي غير متاح قبل ربط وسيط التداول':'تنفيذ صفقة تجريبية'});
-  const tradeHead=document.querySelector('aside.panel .head');
-  if(tradeHead) tradeHead.innerHTML=accountMode==='demo'?'تنفيذ الصفقة <span style="color:#e9bd65;font-size:11px">تجريبي</span>':'تنفيذ الصفقة <span style="color:#f0b45b;font-size:11px">حقيقي · غير مفعّل</span>';
-  msg(accountMode==='demo'?'تم التبديل إلى الحساب التجريبي':'تم التبديل إلى الحساب الحقيقي — التنفيذ غير متاح حالياً');
-}
+/* إعداد Supabase */
+const SUPABASE_URL = 'https://jowczhvatafpedxmhuuq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZPC8nzz';
 
-async function transfer(fn){
- const amount=Number(document.getElementById('transferAmount').value);
- if(!Number.isFinite(amount)||amount<=0){msg('أدخل مبلغاً صحيحاً');return}
- const {error}=await sb.rpc(fn,{p_amount:amount});
- if(error){msg('لم ينجح التحويل: '+error.message);return}
- msg('تم التحويل بنجاح');await loadAccount();
-}
-async function loadWalletHistory(){
- const box=document.getElementById('walletHistory');
- const {data,error}=await sb.from('wallet_transactions').select('transaction_type,amount,currency,status,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(10);
- if(error){box.textContent='تعذر تحميل سجل التحويلات.';return}
- if(!data.length){box.textContent='لا توجد تحويلات بعد.';return}
- box.innerHTML=data.map(x=>`<div style="padding:6px 0;border-bottom:1px solid #263648">${x.transaction_type==='wallet_to_real'?'المحفظة ← الحقيقي':'الحقيقي ← المحفظة'} · ${money(x.amount)} · ${new Date(x.created_at).toLocaleString('ar')}</div>`).join('');
-}
-function setAmount(v){document.getElementById('amount').value=v;profit()}
-function profit(){let a=Number(document.getElementById('amount').value)||0;document.getElementById('profit').textContent=money(a*.85)}
-document.getElementById('amount').addEventListener('input',profit);
-function selectAsset(b,s,p,t){document.querySelectorAll('.asset').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('symbol').textContent=s;document.getElementById('price').textContent=p;document.getElementById('statAsset').textContent=s;document.getElementById('chart').src='https://www.tradingview.com/widgetembed/?symbol='+encodeURIComponent(t)+'&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar'}
-function filterAssets(){let q=document.getElementById('filter').value.toLowerCase();document.querySelectorAll('.asset').forEach(a=>a.style.display=a.innerText.toLowerCase().includes(q)?'flex':'none')}
-async function demoTrade(d){
- if(accountMode!=='demo'){msg('التداول الحقيقي غير مفعّل حالياً حتى ربط وسيط التداول.');return}
- const amount=Number(document.getElementById('amount').value);
- if(!Number.isFinite(amount)||amount<=0){msg('أدخل مبلغاً صحيحاً');return}
- if(!currentUser){msg('يرجى تسجيل الدخول أولاً');return}
- const duration=document.getElementById('duration').value;
- const {data,error}=await sb.rpc('reserve_demo_trade',{p_amount:amount});
- if(error){msg('تعذر تنفيذ الحجز التجريبي: '+error.message);return}
- balance=Number(data);
- const balanceEl=document.getElementById('balance');if(balanceEl)balanceEl.textContent=money(balance);
- renderAccountBalances();
- const body=document.getElementById('history');
- if(body.querySelector('.empty'))body.innerHTML='';
- const row=body.insertRow(0);
- [document.getElementById('statAsset').textContent,d,money(amount),duration,'تجريبية — محاكاة'].forEach((value,index)=>{
-  const cell=row.insertCell();cell.textContent=value;
-  if(index===1)cell.style.color=d==='صعود'?'var(--g2)':'var(--r)';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* حالة التطبيق */
+let currentUser = null;
+let walletBalance = 0;
+let realBalance = 0;
+let demoBalance = 10000;
+let accountMode = 'demo';
+let selectedSymbol = 'EUR/USD';
+let isLoading = false;
+
+const $ = id => document.getElementById(id);
+
+function money(value){
+ const number = Number(value || 0);
+ return '$' + number.toLocaleString('en-US',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
  });
- msg('تم حجز مبلغ الصفقة التجريبية من رصيدك. نتيجة الصفقة ما زالت محاكاة.');
-}
-async function logoutUser(){
- const button=document.querySelector('.logout-btn');if(button)button.disabled=true;
- const {error}=await sb.auth.signOut();
- if(error){if(button)button.disabled=false;msg('تعذر تسجيل الخروج: '+error.message);return}
- location.replace('/index.html');
 }
 
-function toggleVerificationForm(){
- const form=document.getElementById('verificationForm');
- form.hidden=!form.hidden;
+function msg(message){
+ const notice = $('notice');
+ notice.textContent = message;
+ notice.style.display = 'block';
+ clearTimeout(window.eqoNoticeTimer);
+ window.eqoNoticeTimer = setTimeout(()=>{
+  notice.style.display = 'none';
+ },4000);
 }
-async function submitVerification(event){
- event.preventDefault();
- if(!currentUser){msg('يرجى تسجيل الدخول أولاً');return}
- const type=document.getElementById('documentType').value;
- const front=document.getElementById('documentFront').files[0];
- const back=document.getElementById('documentBack').files[0];
- const selfie=document.getElementById('selfieFile').files[0];
- if(!type||!front){msg('اختر نوع الوثيقة وارفع صورتها الأمامية');return}
- const files=[front,back,selfie].filter(Boolean);
- const allowed=['image/jpeg','image/png','application/pdf'];
- for(const file of files){
-  if(file.size>5*1024*1024){msg('حجم كل ملف يجب ألا يتجاوز 5 ميغابايت');return}
-  if(!allowed.includes(file.type)){msg('نوع ملف غير مدعوم؛ استخدم JPG أو PNG أو PDF');return}
- }
- const button=document.getElementById('verificationSubmit');button.disabled=true;button.textContent='جارٍ رفع المستندات...';
- const uploaded=[];
+
+/* التنقل بين الأقسام */
+function showView(view){
+ const views = [
+  'trading','wallet','deposit','withdraw',
+  'profile','verification','settings'
+ ];
+
+ if(!views.includes(view)) return;
+
+ views.forEach(name=>{
+  const element = $(name+'View');
+  if(element) element.hidden = name !== view;
+ });
+
+ document.querySelectorAll('.eqo-nav-btn[data-view]').forEach(button=>{
+  button.classList.toggle('active',button.dataset.view === view);
+ });
+
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* تحديث الأرصدة */
+function renderAccountBalances(){
+ $('demoBalance').textContent = money(demoBalance);
+ $('realBalance').textContent = money(realBalance);
+ $('walletBalance').textContent = money(walletBalance);
+
+ $('walletPageBalance').textContent = money(walletBalance);
+ $('walletPageReal').textContent = money(realBalance);
+ $('walletPageDemo').textContent = money(demoBalance);
+
+ $('walletCardBalance').textContent = money(walletBalance);
+ $('realCardBalance').textContent = money(realBalance);
+ $('demoCardBalance').textContent = money(demoBalance);
+
+ $('accountBalance').textContent =
+  money(accountMode === 'demo' ? demoBalance : realBalance);
+
+ $('accountType').textContent =
+  accountMode === 'demo' ? 'تجريبي' : 'حقيقي';
+}
+
+/* التبديل بين الحسابات */
+function switchAccount(mode){
+ if(mode !== 'demo' && mode !== 'real') return;
+
+ accountMode = mode;
+
+ $('demoModeBtn').classList.toggle('active',mode === 'demo');
+ $('realModeBtn').classList.toggle('active',mode === 'real');
+
+ $('tradeModeLabel').textContent =
+  mode === 'demo' ? 'حساب تجريبي' : 'حساب حقيقي — عرض فقط';
+
+ $('tradeHint').textContent = mode === 'demo'
+  ? 'أنت في الحساب التجريبي. يتم حجز مبلغ الصفقة من الرصيد التجريبي فقط.'
+  : 'الحساب الحقيقي للعرض فقط. تنفيذ الصفقات الحقيقية غير متاح حالياً.';
+
+ $('upButton').disabled = mode === 'real';
+ $('downButton').disabled = mode === 'real';
+
+ renderAccountBalances();
+
+ msg(mode === 'demo'
+  ? 'تم التبديل إلى الحساب التجريبي'
+  : 'تم التبديل إلى الحساب الحقيقي — التنفيذ غير مفعّل');
+}
+
+/* تحميل بيانات المستخدم والمحفظة */
+async function loadAccount(){
  try{
-  const base=currentUser.id+'/'+Date.now();
-  for(const [key,file] of [['front',front],['back',back],['selfie',selfie]]){
-   if(!file)continue;
-   const ext=(file.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,'');
-   const path=base+'/'+key+'.'+ext;
-   const {error}=await sb.storage.from('identity-documents').upload(path,file,{upsert:false,contentType:file.type});
-   if(error)throw error;
-   uploaded.push(path);
+  const {data,error} = await sb.auth.getSession();
+
+  if(error) throw error;
+
+  const session = data.session;
+
+  if(!session){
+   location.replace('/index.html');
+   return;
   }
-  const {error:insertError}=await sb.from('verification_submissions').insert({user_id:currentUser.id,document_type:type,front_path:uploaded[0],back_path:uploaded[1]||null,selfie_path:uploaded[2]||null,status:'pending'});
-  if(insertError)throw insertError;
-  document.getElementById('verificationStatus').textContent='قيد المراجعة';
-  document.getElementById('verificationStatus').style.background='#173b35';
-  document.getElementById('verificationStatus').style.color='#9af0d2';
-  document.getElementById('verificationForm').reset();
-  document.getElementById('verificationForm').hidden=true;
-  msg('تم إرسال مستنداتك للمراجعة بنجاح');
+
+  currentUser = session.user;
+
+  $('profileEmail').textContent = currentUser.email || 'غير متاح';
+  $('profileUserId').textContent = currentUser.id || '—';
+
+  $('profileCreated').textContent = currentUser.created_at
+   ? new Date(currentUser.created_at).toLocaleString('ar')
+   : '—';
+
+  const result = await sb
+   .from('wallets')
+   .select('balance,real_balance,demo_balance')
+   .eq('user_id',currentUser.id)
+   .single();
+
+  if(result.error) throw result.error;
+
+  const dataWallet = result.data;
+
+  walletBalance = Number(dataWallet.balance || 0);
+  realBalance = Number(dataWallet.real_balance || 0);
+  demoBalance = Number(dataWallet.demo_balance ?? 10000);
+
+  renderAccountBalances();
+  await loadWalletHistory();
+
+ }catch(error){
+  console.error('Load account error:',error);
+  msg('تعذر تحميل بيانات الحساب: '+(error.message || 'خطأ غير معروف'));
+ }
+}
+
+/* سجل التحويلات */
+async function loadWalletHistory(){
+ const box = $('walletHistory');
+
+ if(!currentUser){
+  box.textContent = 'يرجى تسجيل الدخول.';
+  return;
+ }
+
+ const {data,error} = await sb
+  .from('wallet_transactions')
+  .select('transaction_type,amount,currency,status,created_at')
+  .eq('user_id',currentUser.id)
+  .order('created_at',{ascending:false})
+  .limit(10);
+
+ if(error){
+  console.error(error);
+  box.textContent = 'تعذر تحميل سجل التحويلات. تحقق من صلاحيات الجدول.';
+  return;
+ }
+
+ if(!data || data.length === 0){
+  box.textContent = 'لا توجد تحويلات حتى الآن.';
+  return;
+ }
+
+ box.innerHTML = '';
+
+ data.forEach(item=>{
+  const row = document.createElement('div');
+  row.style.cssText = 'padding:10px 0;border-bottom:1px solid #263648;font-size:12px';
+
+  const type = item.transaction_type === 'wallet_to_real'
+   ? 'من المحفظة إلى الحساب الحقيقي'
+   : 'من الحساب الحقيقي إلى المحفظة';
+
+  row.textContent = type+' · '+money(item.amount)+' · '+
+   new Date(item.created_at).toLocaleString('ar')+
+   ' · '+(item.status || '—');
+
+  box.appendChild(row);
+ });
+}
+
+/* التحويل بين المحفظة والحساب الحقيقي */
+async function transferFunds(functionName){
+ if(!currentUser){
+  msg('يرجى تسجيل الدخول أولاً');
+  return;
+ }
+
+ const amount = Number($('transferAmount').value);
+
+ if(!Number.isFinite(amount) || amount <= 0){
+  msg('أدخل مبلغاً صحيحاً');
+  return;
+ }
+
+ if(isLoading) return;
+
+ isLoading = true;
+
+ try{
+  const {error} = await sb.rpc(functionName,{p_amount:amount});
+
+  if(error) throw error;
+
+  msg('تم تنفيذ التحويل بنجاح');
+  await loadAccount();
+
  }catch(error){
   console.error(error);
-  msg('تعذر إرسال المستندات: '+(error.message||'تحقق من إعدادات التخزين والصلاحيات'));
- }finally{button.disabled=false;button.textContent='إرسال طلب التوثيق'}
+  msg('لم ينجح التحويل: '+(error.message || 'تحقق من إعدادات التحويل'));
+ }finally{
+  isLoading = false;
+ }
 }
 
-function saveDisplaySetting(){
- const language=document.getElementById('languageSetting')?.value||'ar';
- try{localStorage.setItem('eqo_display_language',language)}catch(e){}
- msg(language==='ar'?'تم حفظ تفضيل اللغة العربية':'تم حفظ التفضيل؛ ترجمة الواجهة الإنجليزية قيد التجهيز');
+/* البحث عن الأصول */
+function filterAssets(){
+ const query = $('assetSearch').value.toLowerCase().trim();
+
+ document.querySelectorAll('#assetList .asset').forEach(button=>{
+  button.style.display =
+   button.innerText.toLowerCase().includes(query) ? 'flex' : 'none';
+ });
 }
-try{const savedLanguage=localStorage.getItem('eqo_display_language');if(savedLanguage&&document.getElementById('languageSetting'))document.getElementById('languageSetting').value=savedLanguage}catch(e){}
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session)location.replace('/index.html')});
-loadAccount();
-switchAccountMode();
-</script></body></html>
+
+/* تغيير الأصل والرسم */
+function selectAsset(button){
+ document.querySelectorAll('#assetList .asset').forEach(item=>{
+  item.classList.remove('active');
+ });
+
+ button.classList.add('active');
+
+ const symbol = button.dataset.symbol;
+ const price = button.dataset.price;
+ const tvSymbol = button.dataset.tv;
+
+ selectedSymbol = symbol;
+
+ $('selectedAsset').textContent = symbol;
+ $('currentPrice').textContent = price;
+
+ const chartURL =
+  'https://www.tradingview.com/widgetembed/?symbol='+
+  encodeURIComponent(tvSymbol)+
+  '&interval=5&hidesidetoolbar=0&symboledit=1&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hideideas=1&locale=ar';
+
+ $('chartFrame').src = chartURL;
+}
+
+/* مبلغ الصفقة */
+function setAmount(value){
+ $('tradeAmount').value = value;
+}
+
+/* تنفيذ حجز صفقة تجريبية */
+async function placeTrade(direction){
+ if(accountMode !== 'demo'){
+  msg('التداول الحقيقي غير مفعّل حالياً.');
+  return;
+ }
+
+ if(!currentUser){
+  msg('يرجى تسجيل الدخول أولاً');
+  return;
+ }
+
+ const amount = Number($('tradeAmount').value);
+
+ if(!Number.isFinite(amount) || amount <= 0){
+  msg('أدخل مبلغاً صحيحاً');
+  return;
+ }
+
+ if(amount > demoBalance){
+  msg('رصيدك التجريبي لا يكفي لهذه الصفقة');
+  return;
+ }
+
+ if(isLoading) return;
+
+ isLoading = true;
+ $('upButton').disabled = true;
+ $('downButton').disabled = true;
+
+ try{
+  const {data,error} = await sb.rpc('reserve_demo_trade',{
+   p_amount:amount
+  });
+
+  if(error) throw error;
+
+  demoBalance = Number(data);
+
+  renderAccountBalances();
+
+  const body = $('tradeHistory');
+
+  const empty = body.querySelector('.empty');
+  if(empty) body.innerHTML = '';
+
+  const row = body.insertRow(0);
+
+  const values = [
+   selectedSymbol,
+   'تجريبي',
+   direction === 'up' ? 'صعود' : 'هبوط',
+   money(amount),
+   $('tradeDuration').selectedOptions[0].textContent,
+   'محجوزة — محاكاة'
+  ];
+
+  values.forEach((value,index)=>{
+   const cell = row.insertCell();
+   cell.textContent = value;
+
+   if(index === 2){
+    cell.style.color = direction === 'up'
+     ? 'var(--green2)' : 'var(--red)';
+   }
+  });
+
+  msg('تم حجز مبلغ الصفقة من رصيدك التجريبي. النتيجة غير محسوبة بعد.');
+
+ }catch(error){
+  console.error(error);
+  msg('تعذر حجز الصفقة: '+(error.message || 'خطأ غير معروف'));
+ }finally{
+  isLoading = false;
+  $('upButton').disabled = accountMode !== 'demo';
+  $('downButton').disabled = accountMode !== 'demo';
+ }
+}
+
+/* تسجيل الخروج */
+async function logoutUser(){
+ if(isLoading) return;
+
+ const confirmed = confirm('هل تريد تسجيل الخروج؟');
+ if(!confirmed) return;
+
+ try{
+  const {error} = await sb.auth.signOut();
+  if(error) throw error;
+
+  location.replace('/index.html');
+
+ }catch(error){
+  console.error(error);
+  msg('تعذر تسجيل الخروج: '+error.message);
+ }
+}
+
+/* إظهار نموذج التوثيق */
+function toggleVerificationForm(){
+ $('verificationForm').hidden = !$('verificationForm').hidden;
+}
+
+/* رفع مستندات التوثيق */
+async function submitVerification(event){
+ event.preventDefault();
+
+ if(!currentUser){
+  msg('يرجى تسجيل الدخول أولاً');
+  return;
+ }
+
+ const type = $('documentType').value;
+ const front = $('documentFront').files[0];
+ const back = $('documentBack').files[0];
+ const selfie = $('selfieFile').files[0];
+
+ if(!type || !front){
+  msg('اختر نوع الوثيقة وارفع صورتها الأمامية');
+  return;
+ }
+
+ const files = [front,back,selfie].filter(Boolean);
+ const allowed = ['image/jpeg','image/png','application/pdf'];
+
+ for(const file of files){
+  if(file.size > 5*1024*1024){
+   msg('حجم كل ملف يجب ألا يتجاوز 5 ميغابايت');
+   return;
+  }
+
+  if(!allowed.includes(file.type)){
+   msg('نوع الملف غير مدعوم. استخدم JPG أو PNG أو PDF');
+   return;
+  }
+ }
+
+ const button = $('verificationSubmit');
+ button.disabled = true;
+ button.textContent = 'جارٍ رفع المستندات...';
+
+ const uploaded = {};
+
+ try{
+  const base = currentUser.id+'/'+Date.now();
+
+  const documents = [
+   ['front',front],
+   ['back',back],
+   ['selfie',selfie]
+  ];
+
+  for(const [key,file] of documents){
+   if(!file) continue;
+
+   const extension = (file.name.split('.').pop() || 'bin')
+    .toLowerCase().replace(/[^a-z0-9]/g,'');
+
+   const path = base+'/'+key+'.'+extension;
+
+   const {error} = await sb.storage
+    .from('identity-documents')
+    .upload(path,file,{
+     upsert:false,
+     contentType:file.type
+    });
+
+   if(error) throw error;
+
+   uploaded[key] = path;
+  }
+
+  const {error:insertError} = await sb
+   .from('verification_submissions')
+   .insert({
+    user_id:currentUser.id,
+    document_type:type,
+    front_path:uploaded.front,
+    back_path:uploaded.back || null,
+    selfie_path:uploaded.selfie || null,
+    status:'pending'
+   });
+
+  if(insertError) throw insertError;
+
+  $('verificationStatus').textContent = 'قيد المراجعة';
+  $('verificationStatus').style.background = '#173b35';
+  $('verificationStatus').style.color = '#9af0d2';
+
+  $('verificationForm').reset();
+  $('verificationForm').hidden = true;
+
+  msg('تم إرسال مستنداتك للمراجعة بنجاح');
+
+ }catch(error){
+  console.error(error);
+  msg('تعذر إرسال المستندات: '+(error.message || 'تحقق من إعدادات التخزين والصلاحيات'));
+ }finally{
+  button.disabled = false;
+  button.textContent = 'إرسال طلب التوثيق';
+ }
+}
+
+/* إعدادات العرض */
+function saveDisplaySetting(){
+ const language = $('languageSetting').value;
+
+ try{
+  localStorage.setItem('eqo_display_language',language);
+ }catch(error){
+  console.warn(error);
+ }
+
+ msg(language === 'ar'
+  ? 'تم حفظ تفضيل اللغة العربية'
+  : 'تم حفظ التفضيل. الترجمة الإنجليزية قيد التجهيز');
+}
+
+function loadDisplaySetting(){
+ try{
+  const saved = localStorage.getItem('eqo_display_language');
+  if(saved && $('languageSetting')){
+   $('languageSetting').value = saved;
+  }
+ }catch(error){
+  console.warn(error);
+ }
+}
+
+/* مراقبة جلسة الدخول */
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event === 'SIGNED_OUT'){
+  location.replace('/index.html');
+ }
+});
+
+/* بدء التطبيق */
+document.addEventListener('DOMContentLoaded',async()=>{
+ loadDisplaySetting();
+ switchAccount('demo');
+ await loadAccount();
+});
+</script>
+
+</body>
+</html>
