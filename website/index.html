@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -19,17 +20,35 @@ body{
 .container{width:100%;max-width:560px}
 .logo{text-align:center;font-size:34px;font-weight:900;margin:0 0 22px}
 .logo span{color:#2678ff}
-.notice{background:#101a2b;border:1px solid #0755a9;border-radius:14px;padding:18px;margin-bottom:22px;line-height:1.8}
+.notice{
+ background:#101a2b;border:1px solid #0755a9;border-radius:14px;
+ padding:18px;margin-bottom:22px;line-height:1.8
+}
 .notice strong{color:#3284ff;font-size:19px}
 .notice p{margin:5px 0 0;color:#c5ccda}
-.card{background:#424b60;border-radius:18px;padding:26px 24px;box-shadow:0 12px 35px #0005}
-.tabs{display:flex;background:#596174;border-radius:12px;padding:7px;margin-bottom:24px}
-.tabs button{width:50%;border:0;background:transparent;color:#b8c2d2;padding:16px 8px;font-size:19px;font-weight:bold;border-radius:9px;cursor:pointer}
-.tabs button.active{background:#30394e;color:#fff;border-bottom:4px solid #0875ff}
+.card{
+ background:#424b60;border-radius:18px;padding:26px 24px;
+ box-shadow:0 12px 35px #0005
+}
+.tabs{
+ display:flex;background:#596174;border-radius:12px;
+ padding:7px;margin-bottom:24px
+}
+.tabs button{
+ width:50%;border:0;background:transparent;color:#b8c2d2;
+ padding:16px 8px;font-size:19px;font-weight:bold;
+ border-radius:9px;cursor:pointer
+}
+.tabs button.active{
+ background:#30394e;color:#fff;border-bottom:4px solid #0875ff
+}
 .form{display:none}
 .form.active{display:block}
 .field{margin:19px 0}
-.field label{display:block;color:#e0e6f0;font-size:16px;font-weight:bold;margin-bottom:9px}
+.field label{
+ display:block;color:#e0e6f0;font-size:16px;
+ font-weight:bold;margin-bottom:9px
+}
 .field input,.field select{
  width:100%;min-height:56px;border:2px solid #343a49;
  border-radius:13px;background:#20232d;color:#fff;
@@ -47,29 +66,55 @@ body{
 }
 .iti__country-list{
  background:#20232d!important;color:#fff!important;
- border:1px solid #596174!important;max-height:260px!important;
- direction:ltr;z-index:9999
+ border:1px solid #596174!important;
+ max-height:260px!important;direction:ltr;z-index:9999
 }
 .iti__country{padding:9px 12px!important}
-.iti__country:hover,.iti__country.iti__highlight{background:#34435d!important}
+.iti__country:hover,.iti__country.iti__highlight{
+ background:#34435d!important
+}
 .iti__dial-code{color:#83b5ff!important}
 .password-wrap{position:relative;width:100%}
 .password-wrap input{padding-left:58px!important}
 .password-toggle{
- position:absolute;left:12px;top:50%;transform:translateY(-50%);
- border:0;background:transparent;color:#9db9e8;
- font-size:21px;cursor:pointer;padding:8px;z-index:2
+ position:absolute;left:12px;top:50%;
+ transform:translateY(-50%);border:0;background:transparent;
+ color:#9db9e8;font-size:21px;cursor:pointer;padding:8px;z-index:2
 }
 .password-toggle:hover{color:#fff}
-.check-row{display:flex;align-items:flex-start;gap:12px;margin:20px 0;line-height:1.7;font-size:14px}
-.check-row input{width:22px;height:22px;flex-shrink:0;margin-top:3px;accent-color:#0875ff}
-.remember-row{display:flex;align-items:center;gap:9px;margin:16px 0;color:#e0e6f0;font-size:14px}
-.remember-row input{width:18px;height:18px;accent-color:#0875ff}
-.forgot{display:block;text-align:left;color:#8bbaff;background:none;border:0;cursor:pointer;font-size:14px;margin:10px 0 15px;padding:5px}
+.check-row{
+ display:flex;align-items:flex-start;gap:12px;
+ margin:20px 0;line-height:1.7;font-size:14px
+}
+.check-row input{
+ width:22px;height:22px;flex-shrink:0;
+ margin-top:3px;accent-color:#0875ff
+}
+.remember-row{
+ display:flex;align-items:center;gap:9px;
+ margin:16px 0;color:#e0e6f0;font-size:14px
+}
+.remember-row input{
+ width:18px;height:18px;accent-color:#0875ff
+}
+.forgot{
+ display:block;text-align:left;color:#8bbaff;
+ background:none;border:0;cursor:pointer;
+ font-size:14px;margin:10px 0 15px;padding:5px
+}
 .forgot:hover{color:#fff;text-decoration:underline}
-.submit{width:100%;border:0;border-radius:14px;background:linear-gradient(100deg,#287bff,#0062f5);color:white;font-size:21px;font-weight:bold;padding:19px;margin-top:15px;cursor:pointer}
+.submit{
+ width:100%;border:0;border-radius:14px;
+ background:linear-gradient(100deg,#287bff,#0062f5);
+ color:white;font-size:21px;font-weight:bold;
+ padding:19px;margin-top:15px;cursor:pointer
+}
 .submit:disabled{opacity:.6;cursor:wait}
-.message{display:none;padding:13px;border-radius:10px;margin:15px 0;line-height:1.7;background:#172b42;color:#dceaff;overflow-wrap:anywhere}
+.message{
+ display:none;padding:13px;border-radius:10px;
+ margin:15px 0;line-height:1.7;
+ background:#172b42;color:#dceaff;overflow-wrap:anywhere
+}
 .message.show{display:block}
 .message.error{background:#48252b;color:#ffe1e1}
 .footer{text-align:center;color:#9da9bd;font-size:13px;margin-top:22px}
@@ -101,6 +146,7 @@ body{
 
   <div id="message" class="message" role="status" aria-live="polite"></div>
 
+  <!-- نموذج التسجيل -->
   <form id="registerForm" class="form active">
 
    <div class="field">
@@ -112,17 +158,20 @@ body{
 
    <div class="field">
     <label for="regPhone">رقم الهاتف</label>
-    <input id="regPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="أدخل رقم الهاتف" required>
+    <input id="regPhone" type="tel" inputmode="tel"
+     autocomplete="tel" placeholder="أدخل رقم الهاتف" required>
    </div>
 
    <div class="field">
     <label for="regName">الاسم الكامل</label>
-    <input id="regName" type="text" autocomplete="name" placeholder="الاسم الأول واسم العائلة" required>
+    <input id="regName" type="text" autocomplete="name"
+     placeholder="الاسم الأول واسم العائلة" required>
    </div>
 
    <div class="field">
     <label for="regEmail">البريد الإلكتروني</label>
-    <input id="regEmail" type="email" autocomplete="email" placeholder="أدخل بريدك الإلكتروني" required>
+    <input id="regEmail" type="email" autocomplete="email"
+     placeholder="أدخل بريدك الإلكتروني" required>
    </div>
 
    <div class="field">
@@ -133,39 +182,54 @@ body{
    <div class="field">
     <label for="regPassword">كلمة المرور</label>
     <div class="password-wrap">
-     <input id="regPassword" type="password" minlength="8" autocomplete="new-password" placeholder="8 أحرف على الأقل" required>
-     <button class="password-toggle" type="button" data-password="regPassword" aria-label="إظهار كلمة المرور">◉</button>
+     <input id="regPassword" type="password" minlength="8"
+      autocomplete="new-password"
+      placeholder="8 أحرف على الأقل" required>
+     <button class="password-toggle" type="button"
+      data-password="regPassword" aria-label="إظهار كلمة المرور">◉</button>
     </div>
    </div>
 
    <div class="field">
     <label for="confirmPassword">تأكيد كلمة المرور</label>
     <div class="password-wrap">
-     <input id="confirmPassword" type="password" minlength="8" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور" required>
-     <button class="password-toggle" type="button" data-password="confirmPassword" aria-label="إظهار كلمة المرور">◉</button>
+     <input id="confirmPassword" type="password" minlength="8"
+      autocomplete="new-password"
+      placeholder="أعد كتابة كلمة المرور" required>
+     <button class="password-toggle" type="button"
+      data-password="confirmPassword" aria-label="إظهار كلمة المرور">◉</button>
     </div>
    </div>
 
    <div class="check-row">
     <input id="ageAgree" type="checkbox" required>
-    <label for="ageAgree">أؤكد أن عمري 18 عاماً أو أكثر وأوافق على شروط المنصة.</label>
+    <label for="ageAgree">
+     أؤكد أن عمري 18 عاماً أو أكثر وأوافق على شروط المنصة.
+    </label>
    </div>
 
-   <button class="submit" id="registerButton" type="submit">إنشاء الحساب</button>
+   <button class="submit" id="registerButton" type="submit">
+    إنشاء الحساب
+   </button>
   </form>
 
+  <!-- نموذج تسجيل الدخول -->
   <form id="loginForm" class="form">
 
    <div class="field">
     <label for="loginEmail">البريد الإلكتروني</label>
-    <input id="loginEmail" type="email" autocomplete="email" placeholder="أدخل بريدك الإلكتروني" required>
+    <input id="loginEmail" type="email" autocomplete="email"
+     placeholder="أدخل بريدك الإلكتروني" required>
    </div>
 
    <div class="field">
     <label for="loginPassword">كلمة المرور</label>
     <div class="password-wrap">
-     <input id="loginPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور" required>
-     <button class="password-toggle" type="button" data-password="loginPassword" aria-label="إظهار كلمة المرور">◉</button>
+     <input id="loginPassword" type="password"
+      autocomplete="current-password"
+      placeholder="كلمة المرور" required>
+     <button class="password-toggle" type="button"
+      data-password="loginPassword" aria-label="إظهار كلمة المرور">◉</button>
     </div>
    </div>
 
@@ -174,12 +238,20 @@ body{
     <label for="rememberMe">تذكرني</label>
    </div>
 
-   <button type="button" class="forgot" id="forgotPassword">نسيت كلمة المرور؟</button>
-   <button class="submit" id="loginButton" type="submit">تسجيل الدخول</button>
+   <button type="button" class="forgot" id="forgotPassword">
+    نسيت كلمة المرور؟
+   </button>
+
+   <button class="submit" id="loginButton" type="submit">
+    تسجيل الدخول
+   </button>
 
   </form>
 
-  <div class="small-note">لا تشارك كلمة المرور أو رموز التحقق مع أي شخص.</div>
+  <div class="small-note">
+   لا تشارك كلمة المرور أو رموز التحقق مع أي شخص.
+  </div>
+
  </main>
 
  <div class="footer">EQOOption · منصة الحسابات</div>
@@ -191,77 +263,120 @@ body{
 <script>
 "use strict";
 
-/* إعداد Supabase */
+/* =====================================
+   1. إعداد Supabase
+===================================== */
+
 const SUPABASE_URL =
  "https://jowczhvatafpedxmhuuq.supabase.co";
 
+/* المفتاح الجديد */
 const SUPABASE_KEY =
- "sb_publishable_PbmN3Y3i9guzEZ4PZJkKCA_ZCPC8nzz";
+ "sb_publishable_BWk03dsslL7fYH3BAe5BVg_5pJDdMc3";
 
-/* عناصر الصفحة */
+/* لا تضع Secret أو service_role في كود المتصفح */
+
+/* =====================================
+   2. عناصر الصفحة
+===================================== */
+
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("loginForm");
+
 const registerTab = document.getElementById("registerTab");
 const loginTab = document.getElementById("loginTab");
+
 const messageBox = document.getElementById("message");
 const residenceCountry = document.getElementById("residenceCountry");
 const phoneInput = document.getElementById("regPhone");
 const rememberMe = document.getElementById("rememberMe");
 
-/* تفضيل تذكر الدخول */
-try {
- const saved = localStorage.getItem("eqo_remember_me");
- if (saved !== null) rememberMe.checked = saved === "true";
-} catch(e) {}
+/* =====================================
+   3. إعداد تذكر الجلسة
+===================================== */
 
-rememberMe.addEventListener("change", function() {
- try {
-  localStorage.setItem("eqo_remember_me", String(this.checked));
- } catch(e) {}
+try {
+  const savedPreference = localStorage.getItem("eqo_remember_me");
+  if (savedPreference !== null) {
+    rememberMe.checked = savedPreference === "true";
+  }
+} catch (error) {
+  console.warn("Remember preference unavailable:", error);
+}
+
+rememberMe.addEventListener("change", function () {
+  try {
+    localStorage.setItem("eqo_remember_me", String(this.checked));
+  } catch (error) {
+    console.warn(error);
+  }
 });
 
-/* التخزين المؤقت للجلسة عند إلغاء تذكرني */
+/*
+  تذكرني مفعّل: تخزين دائم.
+  تذكرني غير مفعّل: تخزين مؤقت للجلسة.
+*/
+
 const authStorage = {
- async getItem(key) {
-  try {
-   return (rememberMe.checked ? localStorage : sessionStorage).getItem(key);
-  } catch(e) { return null; }
- },
- async setItem(key,value) {
-  try {
-   const active = rememberMe.checked ? localStorage : sessionStorage;
-   const inactive = rememberMe.checked ? sessionStorage : localStorage;
-   active.setItem(key,value);
-   inactive.removeItem(key);
-  } catch(e) { console.error(e); }
- },
- async removeItem(key) {
-  try {
-   localStorage.removeItem(key);
-   sessionStorage.removeItem(key);
-  } catch(e) {}
- }
+  async getItem(key) {
+    try {
+      const preferred = rememberMe.checked ? localStorage : sessionStorage;
+      const other = rememberMe.checked ? sessionStorage : localStorage;
+
+      return preferred.getItem(key) || other.getItem(key);
+    } catch (error) {
+      console.error("Session read error:", error);
+      return null;
+    }
+  },
+
+  async setItem(key, value) {
+    try {
+      const activeStore = rememberMe.checked ? localStorage : sessionStorage;
+      const inactiveStore = rememberMe.checked ? sessionStorage : localStorage;
+
+      activeStore.setItem(key, value);
+      inactiveStore.removeItem(key);
+    } catch (error) {
+      console.error("Session storage error:", error);
+    }
+  },
+
+  async removeItem(key) {
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 };
 
-/* اتصال Supabase */
+/* =====================================
+   4. إنشاء اتصال Supabase
+===================================== */
+
 if (!window.supabase) {
- throw new Error("تعذر تحميل مكتبة Supabase");
+  throw new Error("تعذر تحميل مكتبة Supabase.");
 }
 
 const supabaseClient = window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY,
- {
-  auth: {
-   storage: authStorage,
-   persistSession: true,
-   autoRefreshToken: true,
-   detectSessionInUrl: true
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth: {
+      storage: authStorage,
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
   }
- }
 );
 
-/* قائمة الدول */
+/* =====================================
+   5. قائمة الدول
+===================================== */
+
 const ALL_COUNTRY_CODES = [
 "AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AX",
 "AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BL","BM","BN","BO","BQ",
@@ -282,257 +397,349 @@ const ALL_COUNTRY_CODES = [
 "VN","VU","WF","WS","YE","YT","ZA","ZM","ZW"
 ];
 
+/* تحويل رمز الدولة إلى علم */
 function countryFlag(code) {
- return code.toUpperCase().replace(/[A-Z]/g, char =>
-  String.fromCodePoint(127397 + char.charCodeAt(0))
- );
+  return code.toUpperCase().replace(/[A-Z]/g, char =>
+    String.fromCodePoint(127397 + char.charCodeAt(0))
+  );
 }
 
+/* إنشاء قائمة الإقامة */
 function loadCountries() {
- const ar = new Intl.DisplayNames(["ar"], {type:"region"});
- const en = new Intl.DisplayNames(["en"], {type:"region"});
+  const arabicNames = new Intl.DisplayNames(["ar"], {
+    type: "region"
+  });
 
- residenceCountry.innerHTML = '<option value="">اختر بلد الإقامة</option>';
+  const englishNames = new Intl.DisplayNames(["en"], {
+    type: "region"
+  });
 
- const countries = ALL_COUNTRY_CODES.map(code => ({
-  code,
-  ar: ar.of(code),
-  en: en.of(code)
- }))
- .filter(c => c.ar && c.en && c.ar !== c.code)
- .sort((a,b) => a.ar.localeCompare(b.ar,"ar"));
+  residenceCountry.innerHTML =
+    '<option value="">اختر بلد الإقامة</option>';
 
- countries.forEach(country => {
-  const option = document.createElement("option");
-  option.value = country.code;
-  option.textContent = countryFlag(country.code) + " " + country.ar + " — " + country.en;
-  residenceCountry.appendChild(option);
- });
+  const countries = ALL_COUNTRY_CODES.map(code => ({
+    code,
+    ar: arabicNames.of(code),
+    en: englishNames.of(code)
+  }))
+  .filter(country =>
+    country.ar &&
+    country.en &&
+    country.ar !== country.code
+  )
+  .sort((a, b) => a.ar.localeCompare(b.ar, "ar"));
 
- residenceCountry.value = "YE";
+  countries.forEach(country => {
+    const option = document.createElement("option");
+    option.value = country.code;
+    option.textContent =
+      countryFlag(country.code) + " " +
+      country.ar + " — " + country.en;
+
+    residenceCountry.appendChild(option);
+  });
+
+  residenceCountry.value = "YE";
 }
 
-/* أداة الهاتف */
+/* =====================================
+   6. أداة رقم الهاتف
+===================================== */
+
 let phoneSelector = null;
 
 try {
- if (window.intlTelInput) {
-  phoneSelector = window.intlTelInput(phoneInput, {
-   initialCountry:"ye",
-   separateDialCode:true,
-   nationalMode:true,
-   allowDropdown:true,
-   countrySearch:true,
-   autoPlaceholder:"polite",
-   preferredCountries:["ye","sa","ae","eg"],
-   useFullscreenPopup:true
-  });
- }
-} catch(error) {
- console.error("Phone input error:",error);
+  if (window.intlTelInput) {
+    phoneSelector = window.intlTelInput(phoneInput, {
+      initialCountry: "ye",
+      separateDialCode: true,
+      nationalMode: true,
+      allowDropdown: true,
+      countrySearch: true,
+      autoPlaceholder: "polite",
+      preferredCountries: ["ye", "sa", "ae", "eg"],
+      useFullscreenPopup: true
+    });
+  }
+} catch (error) {
+  console.error("Phone input error:", error);
 }
 
-residenceCountry.addEventListener("change",function() {
- if (!phoneSelector || !this.value) return;
+/* تغيير مفتاح الهاتف عند تغيير بلد الإقامة */
+residenceCountry.addEventListener("change", function () {
+  if (!phoneSelector || !this.value) return;
 
- const supported = phoneSelector.getCountryData().some(country =>
-  country.iso2.toUpperCase() === this.value
- );
+  const phoneCountries = phoneSelector.getCountryData();
 
- if (supported) phoneSelector.setCountry(this.value.toLowerCase());
+  const supported = phoneCountries.some(country =>
+    country.iso2.toUpperCase() === this.value
+  );
+
+  if (supported) {
+    phoneSelector.setCountry(this.value.toLowerCase());
+  }
 });
 
-/* إظهار وإخفاء كلمة المرور */
+/* =====================================
+   7. إظهار وإخفاء كلمة المرور
+===================================== */
+
 document.querySelectorAll(".password-toggle").forEach(button => {
- button.addEventListener("click",() => {
-  const input = document.getElementById(button.dataset.password);
-  const hidden = input.type === "password";
+  button.addEventListener("click", () => {
+    const input = document.getElementById(button.dataset.password);
+    const isHidden = input.type === "password";
 
-  input.type = hidden ? "text" : "password";
-  button.textContent = hidden ? "◎" : "◉";
-  button.setAttribute("aria-label",hidden ? "إخفاء كلمة المرور" : "إظهار كلمة المرور");
- });
+    input.type = isHidden ? "text" : "password";
+    button.textContent = isHidden ? "◎" : "◉";
+
+    button.setAttribute(
+      "aria-label",
+      isHidden ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+    );
+  });
 });
 
-/* الرسائل */
-function showMessage(message,isError=false) {
- messageBox.textContent = message;
- messageBox.className = "message show" + (isError ? " error" : "");
+/* =====================================
+   8. الرسائل والأزرار
+===================================== */
+
+function showMessage(message, isError = false) {
+  messageBox.textContent = message;
+  messageBox.className =
+    "message show" + (isError ? " error" : "");
 }
 
 function clearMessage() {
- messageBox.textContent = "";
- messageBox.className = "message";
+  messageBox.textContent = "";
+  messageBox.className = "message";
 }
 
-function setBusy(button,busy,text) {
- button.disabled = busy;
- button.textContent = text;
+function setBusy(button, busy, text) {
+  button.disabled = busy;
+  button.textContent = text;
 }
 
-/* التبديل بين النماذج */
+/* =====================================
+   9. التبديل بين التسجيل والدخول
+===================================== */
+
 function showForm(name) {
- clearMessage();
- const isRegister = name === "register";
+  clearMessage();
 
- registerForm.classList.toggle("active",isRegister);
- loginForm.classList.toggle("active",!isRegister);
- registerTab.classList.toggle("active",isRegister);
- loginTab.classList.toggle("active",!isRegister);
+  const isRegister = name === "register";
+
+  registerForm.classList.toggle("active", isRegister);
+  loginForm.classList.toggle("active", !isRegister);
+
+  registerTab.classList.toggle("active", isRegister);
+  loginTab.classList.toggle("active", !isRegister);
 }
 
-registerTab.addEventListener("click",() => showForm("register"));
-loginTab.addEventListener("click",() => showForm("login"));
+registerTab.addEventListener("click", () => showForm("register"));
+loginTab.addEventListener("click", () => showForm("login"));
 
-/* التسجيل */
-registerForm.addEventListener("submit",async function(event) {
- event.preventDefault();
- clearMessage();
+/* =====================================
+   10. إنشاء حساب جديد
+===================================== */
 
- const button = document.getElementById("registerButton");
- const countryIso = residenceCountry.value;
- const name = document.getElementById("regName").value.trim();
- const email = document.getElementById("regEmail").value.trim();
- const password = document.getElementById("regPassword").value;
- const confirm = document.getElementById("confirmPassword").value;
- const referral = document.getElementById("regReferral").value.trim();
+registerForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+  clearMessage();
 
- if (!countryIso) return showMessage("يرجى اختيار بلد الإقامة.",true);
+  const button = document.getElementById("registerButton");
 
- if (!phoneSelector) {
-  return showMessage("تعذر تشغيل أداة الهاتف. تحقق من الإنترنت وأعد تحميل الصفحة.",true);
- }
+  const countryIso = residenceCountry.value;
+  const name = document.getElementById("regName").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const confirm = document.getElementById("confirmPassword").value;
+  const referral = document.getElementById("regReferral").value.trim();
 
- if (!phoneSelector.isValidNumber()) {
-  return showMessage("يرجى إدخال رقم هاتف صحيح مع مفتاح الدولة.",true);
- }
-
- if (!name) return showMessage("يرجى إدخال الاسم الكامل.",true);
- if (password.length < 8) return showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.",true);
- if (password !== confirm) return showMessage("كلمتا المرور غير متطابقتين.",true);
-
- if (!document.getElementById("ageAgree").checked) {
-  return showMessage("يرجى تأكيد العمر والموافقة على الشروط.",true);
- }
-
- const phone = phoneSelector.getNumber();
- const phoneCountry = phoneSelector.getSelectedCountryData();
- const countryOption = residenceCountry.options[residenceCountry.selectedIndex];
-
- setBusy(button,true,"جارٍ إنشاء الحساب...");
-
- try {
-  const {data,error} = await supabaseClient.auth.signUp({
-   email,
-   password,
-   options: {
-    data: {
-     full_name:name,
-     phone:phone,
-     residence_country_code:countryIso,
-     residence_country_name:countryOption.textContent,
-     phone_country_code:phoneCountry.dialCode || "",
-     referral_code:referral || null
-    }
-   }
-  });
-
-  if (error) throw error;
-
-  if (data.session) {
-   showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
-   window.location.href = "trading.html";
-  } else {
-   showMessage("تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول.");
-   showForm("login");
-   document.getElementById("loginEmail").value = email;
+  if (!countryIso) {
+    showMessage("يرجى اختيار بلد الإقامة.", true);
+    return;
   }
 
- } catch(error) {
-  console.error("Registration error:",error);
-  showMessage("تعذر إنشاء الحساب: " + error.message,true);
- } finally {
-  setBusy(button,false,"إنشاء الحساب");
- }
+  if (!phoneSelector) {
+    showMessage("تعذر تشغيل أداة الهاتف. تحقق من اتصال الإنترنت وأعد تحميل الصفحة.", true);
+    return;
+  }
+
+  if (!phoneSelector.isValidNumber()) {
+    showMessage("يرجى إدخال رقم هاتف صحيح مع مفتاح الدولة.", true);
+    return;
+  }
+
+  if (!name) {
+    showMessage("يرجى إدخال الاسم الكامل.", true);
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("كلمة المرور يجب ألا تقل عن 8 أحرف.", true);
+    return;
+  }
+
+  if (password !== confirm) {
+    showMessage("كلمتا المرور غير متطابقتين.", true);
+    return;
+  }
+
+  if (!document.getElementById("ageAgree").checked) {
+    showMessage("يرجى تأكيد العمر والموافقة على الشروط.", true);
+    return;
+  }
+
+  const phone = phoneSelector.getNumber();
+  const phoneCountry = phoneSelector.getSelectedCountryData();
+  const countryOption =
+    residenceCountry.options[residenceCountry.selectedIndex];
+
+  setBusy(button, true, "جارٍ إنشاء الحساب...");
+
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+          phone: phone,
+          residence_country_code: countryIso,
+          residence_country_name: countryOption.textContent,
+          phone_country_code: phoneCountry.dialCode || "",
+          referral_code: referral || null
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    if (data.session) {
+      showMessage("تم إنشاء الحساب بنجاح. جارٍ فتح المنصة...");
+      window.location.href = "trading.html";
+    } else {
+      showMessage(
+        "تم إرسال طلب التسجيل. تحقق من بريدك الإلكتروني لتأكيد الحساب، ثم سجّل الدخول."
+      );
+
+      showForm("login");
+      document.getElementById("loginEmail").value = email;
+    }
+
+  } catch (error) {
+    console.error("Registration error:", error);
+    showMessage("تعذر إنشاء الحساب: " + error.message, true);
+
+  } finally {
+    setBusy(button, false, "إنشاء الحساب");
+  }
 });
 
-/* تسجيل الدخول */
-loginForm.addEventListener("submit",async function(event) {
- event.preventDefault();
- clearMessage();
+/* =====================================
+   11. تسجيل الدخول
+===================================== */
 
- const button = document.getElementById("loginButton");
- const email = document.getElementById("loginEmail").value.trim();
- const password = document.getElementById("loginPassword").value;
+loginForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+  clearMessage();
 
- setBusy(button,true,"جارٍ تسجيل الدخول...");
+  const button = document.getElementById("loginButton");
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
- try {
-  const {data,error} = await supabaseClient.auth.signInWithPassword({
-   email,
-   password
-  });
+  setBusy(button, true, "جارٍ تسجيل الدخول...");
 
-  if (error) throw error;
-  if (!data.session) throw new Error("تعذر إنشاء جلسة الدخول.");
+  try {
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-  showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
-  window.location.href = "trading.html";
+    if (error) throw error;
 
- } catch(error) {
-  console.error("Login error:",error);
-  showMessage("تعذر تسجيل الدخول: " + error.message,true);
- } finally {
-  setBusy(button,false,"تسجيل الدخول");
- }
+    if (!data.session) {
+      throw new Error("تعذر إنشاء جلسة الدخول.");
+    }
+
+    showMessage("تم تسجيل الدخول بنجاح. جارٍ فتح المنصة...");
+    window.location.href = "trading.html";
+
+  } catch (error) {
+    console.error("Login error:", error);
+    showMessage("تعذر تسجيل الدخول: " + error.message, true);
+
+  } finally {
+    setBusy(button, false, "تسجيل الدخول");
+  }
 });
 
-/* استعادة كلمة المرور */
-document.getElementById("forgotPassword").addEventListener("click",async function() {
- clearMessage();
+/* =====================================
+   12. استعادة كلمة المرور
+===================================== */
 
- const email = document.getElementById("loginEmail").value.trim();
+document.getElementById("forgotPassword")
+.addEventListener("click", async function() {
+  clearMessage();
 
- if (!email) {
-  showMessage("أدخل بريدك الإلكتروني أولاً لاستعادة كلمة المرور.",true);
-  document.getElementById("loginEmail").focus();
-  return;
- }
+  const email = document.getElementById("loginEmail").value.trim();
 
- const button = this;
- button.disabled = true;
- button.textContent = "جارٍ الإرسال...";
+  if (!email) {
+    showMessage("أدخل بريدك الإلكتروني أولاً لاستعادة كلمة المرور.", true);
+    document.getElementById("loginEmail").focus();
+    return;
+  }
 
- try {
-  const {error} = await supabaseClient.auth.resetPasswordForEmail(email,{
-   redirectTo:window.location.origin + "/reset-password.html"
-  });
+  const button = this;
+  button.disabled = true;
+  button.textContent = "جارٍ إرسال رابط الاستعادة...";
 
-  if (error) throw error;
+  try {
+    const { error } =
+      await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + "/reset-password.html"
+      });
 
-  showMessage("إذا كان البريد مسجلاً، فستصلك رسالة تحتوي على رابط استعادة كلمة المرور.");
+    if (error) throw error;
 
- } catch(error) {
-  console.error("Password reset error:",error);
-  showMessage("تعذر إرسال رابط الاستعادة: " + error.message,true);
- } finally {
-  button.disabled = false;
-  button.textContent = "نسيت كلمة المرور؟";
- }
+    showMessage(
+      "إذا كان البريد مسجلاً، فستصلك رسالة تحتوي على رابط استعادة كلمة المرور."
+    );
+
+  } catch (error) {
+    console.error("Password reset error:", error);
+    showMessage("تعذر إرسال رابط الاستعادة: " + error.message, true);
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "نسيت كلمة المرور؟";
+  }
 });
 
-/* بدء الصفحة */
+/* =====================================
+   13. تحميل قائمة الدول
+===================================== */
+
 loadCountries();
 
+/* =====================================
+   14. فحص جلسة موجودة
+===================================== */
+
 (async function checkExistingSession() {
- try {
-  const {data,error} = await supabaseClient.auth.getSession();
-  if (error) throw error;
-  if (data.session) window.location.href = "trading.html";
- } catch(error) {
-  console.error("Session check:",error);
- }
+  try {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) throw error;
+
+    if (data.session) {
+      window.location.href = "trading.html";
+    }
+  } catch (error) {
+    console.error("Session check:", error);
+  }
 })();
 </script>
 </body>
- </html>
+</html>
